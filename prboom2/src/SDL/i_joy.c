@@ -67,8 +67,68 @@ void I_PollJoystick(void)
 {
 #ifdef HAVE_SDL_JOYSTICKGETAXIS
   event_t ev;
+#ifdef _EE
+  Sint16 xaxisl, yaxisl, xaxisr;
+  Uint8 hat;
+#else
   Sint16 axis_value;
+#endif
+#ifdef _EE
+  ev.data1 = 0;
+  // rm -- treat buttons like key inputs (easier than recoding main)
+  //ev.data1 =
+  //	(SDL_JoystickGetButton(joystick, 0)<<0) |
+  //	(SDL_JoystickGetButton(joystick, 1)<<1) |
+  //	(SDL_JoystickGetButton(joystick, 2)<<2) |
+  //	(SDL_JoystickGetButton(joystick, 3)<<3);
+  
+  hat = SDL_JoystickGetHat(joystick, 0);
+  
+  if(hat == SDL_HAT_CENTERED)
+  {
+	xaxisl = SDL_JoystickGetAxis(joystick, 0) / 3000;
+	  
+	if(abs(xaxisl) < 3)
+	    ev.data1 = 0;
+	else if(xaxisl > 0)
+		ev.data1 = 1;
+	else
+		ev.data1 = -1;
 
+	yaxisl = SDL_JoystickGetAxis(joystick, 1) / 3000;
+	
+	if(abs(yaxisl) < 2)
+		ev.data3 = 0;
+	else if(yaxisl > 0)
+		ev.data3 = 1;
+	else
+		ev.data3 = -1;
+
+	xaxisr = SDL_JoystickGetAxis(joystick, 2) / 3000;
+	
+	if(abs(xaxisr) < 2)
+		ev.data2 = 0;
+	else if(xaxisr > 0)
+		ev.data2 = 1;
+	else
+		ev.data2 = -1;
+	}
+	else
+	{
+		if(hat & SDL_HAT_UP)
+			ev.data3 = -1;
+
+		if(hat & SDL_HAT_RIGHT)
+			ev.data2 = 1;
+
+		if(hat & SDL_HAT_DOWN)
+			ev.data3 = 1;
+
+		if(hat & SDL_HAT_LEFT)
+			ev.data2 = -1;
+	
+    }
+#else
   if (!usejoystick || (!joystick)) return;
   ev.type = ev_joystick;
   ev.data1 =
@@ -86,7 +146,7 @@ void I_PollJoystick(void)
   axis_value = SDL_JoystickGetAxis(joystick, 1) / 3000;
   if (abs(axis_value)<7) axis_value=0;
   ev.data3 = axis_value;
-
+#endif
   D_PostEvent(&ev);
 #endif
 }
@@ -113,10 +173,12 @@ void I_InitJoystick(void)
   else {
     I_AtExit(I_EndJoystick, true);
     lprintf(LO_INFO, "%sopened %s\n", fname, SDL_JoystickName(joystick));
+#ifndef _EE
     joyup = 32767;
     joydown = -32768;
     joyright = 32767;
     joyleft = -32768;
+#endif
   }
 #endif
 }

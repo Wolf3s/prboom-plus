@@ -598,7 +598,6 @@ int main(int argc, char **argv)
     else
       fprintf(stderr, "Revoked uid %d\n",stored_euid);
 #endif
-
   myargc = argc;
   myargv = (char**)malloc(sizeof(myargv[0]) * myargc);
   memcpy(myargv, argv, sizeof(myargv[0]) * myargc);

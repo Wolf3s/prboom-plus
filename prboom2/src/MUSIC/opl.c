@@ -251,9 +251,11 @@ static void FillBuffer(int16_t *buffer, unsigned int nsamples)
     
     // FIXME???
     //assert(nsamples < opl_sample_rate);
-
+#ifdef __PS2__
+    Chip__GenerateBlock2(&opl_chip, nsamples, (Bit32s*)mix_buffer);
+#else
     Chip__GenerateBlock2(&opl_chip, nsamples, mix_buffer);
-
+#endif
     // Mix into the destination buffer, doubling up into stereo.
 
     for (i=0; i<nsamples; ++i)

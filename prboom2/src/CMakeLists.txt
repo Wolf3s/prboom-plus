@@ -374,7 +374,27 @@ function(AddGameExecutable TARGET SOURCES)
         target_include_directories(${TARGET} PRIVATE ${ALSA_INCLUDE_DIR})
         target_link_libraries(${TARGET} PRIVATE ${ASOUND_LIBRARY})
     endif()
+    if(PS2)
+        target_link_libraries(${TARGET} PRIVATE
+        atomic
+        ogg
+        vorbis
+        modplug
+        mikmod
+        stdc++
+        m
+        debug
+        c
+        gskit
+        dmakit
+        dma
+        ps2_drivers
+        patches
+        config
+        draw)
+    else()
     add_dependencies(${TARGET} prboomwad)
+    endif()
 
     if(MSVC)
         set_target_properties(${TARGET} PROPERTIES
@@ -404,10 +424,15 @@ function(AddGameExecutable TARGET SOURCES)
     endif()
 endfunction()
 
+if(PS2)
+AddGameExecutable(prboom-plus.elf "${PRBOOM_PLUS_SOURCES}")
+else()
 AddGameExecutable(prboom-plus "${PRBOOM_PLUS_SOURCES}")
-
-
+endif()
 # PrBoom-Plus server executable
+if(NOT PS2)
+    set(BUILD_SERVER OFF)
+endif()
 
 option(BUILD_SERVER "Build PrBoom-Plus server executable" ON)
 

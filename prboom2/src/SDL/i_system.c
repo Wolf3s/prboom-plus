@@ -351,6 +351,10 @@ const char *I_DoomExeDir(void)
 
   if (!base)        // cache multiple requests
     {
+#ifdef __PS2__
+		  base = malloc(strlen(prboom_dir) + 1);
+		  strcpy(base, prboom_dir);
+#else
       char *home = M_getenv("HOME");
       char *p_home = strdup(home);
       size_t len = strlen(home);
@@ -362,7 +366,7 @@ const char *I_DoomExeDir(void)
       base = malloc(p_len);
       snprintf(base, p_len, "%s/.%s", p_home, prboom_dir);
       free(p_home);
-
+#endif
       // if ~/.$prboom_dir doesn't exist,
       // create and use directory in XDG_DATA_HOME
       if (M_stat(base, &data_dir) || !S_ISDIR(data_dir.st_mode))
@@ -551,6 +555,82 @@ const char* I_FindFile2(const char* wfname, const char* ext)
 {
   return (const char*) I_FindFileInternal(wfname, ext, true);
 }
+
+#elif defined(_EE)
+char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
+{
+  (void) isStatic;
+	int i;
+	/* Precalculate a length we will need in the loop */
+	size_t pl = strlen(wfname) + strlen(ext) + 4;
+	
+	for(i = 0; i < 5; i++)
+	{
+		char * p;
+		const char * d = NULL;
+		const char * s = NULL;
+		
+		/* Each entry in the switch sets d to directory to look in
+		* and optionally s to a subdirectory of d*/
+		switch(i)
+		{
+			case 0:
+			  d = "";
+			  break;
+              
+			case 1:
+			  d = "host:"
+			  break;
+			
+			case 2:
+			  d = "hdd0:/+DOOM/"
+			  break;
+			
+			case 3:
+			  d = "mass:/"
+			  break;
+			  
+			case 4:
+			  d = "cdrom:\\";
+			  break;
+			  
+			case 5:
+			  d = I_DoomExeDir();
+			  break;
+			
+		}
+		
+		p = malloc((d ? strlen(d) : 0) + ( s ? strlen(s) :  0 + pl);
+		sprintf(p, "%s%s%s%s%s", d ? d : "", (d && !HasTrailingSlash(d)) ? "/" : ""),
+		        s ? s : "", (s && !HasTrailingSlash(s)) ? "/" : "",
+				wfname);
+		
+		if(access(p, F_OK))
+			strcat(p, ext);
+		
+		if (!access(p, F_OK))
+		{
+			lprintf(LO_INFO, " found %s\n", p);
+			return p;
+		}
+		
+		free(p);
+		
+	}
+	
+	return NULL;
+}
+
+char* I_FindFile(const char* wfname, const char* ext)
+{
+  return I_FindFileInternal(wfname, ext, false);
+}
+
+const char* I_FindFile2(const char* wfname, const char* ext)
+{
+  return (const char*) I_FindFileInternal(wfname, ext, true);
+}
+
 
 #endif
 

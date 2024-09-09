@@ -181,7 +181,12 @@ set(CMAKE_REQUIRED_INCLUDES_PREV ${CMAKE_REQUIRED_INCLUDES})
 set(CMAKE_REQUIRED_LIBRARIES_PREV ${CMAKE_REQUIRED_LIBRARIES})
 set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${SDL2_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${SDL2_LIBRARIES})
-check_symbol_exists(SDL_JoystickGetAxis "SDL.h" HAVE_SDL_JOYSTICKGETAXIS)
+if(PS2)
+    # the check fails for our SDL.h for some reason
+    set(HAVE_SDL_JOYSTICKGETAXIS TRUE)
+else()
+    check_symbol_exists(SDL_JoystickGetAxis "SDL.h" HAVE_SDL_JOYSTICKGETAXIS)
+endif()
 set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_PREV})
 set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES_PREV})
 
@@ -212,9 +217,14 @@ else()
         -Wpointer-arith -Wno-unused -Wno-switch -Wno-sign-compare -Wno-pointer-sign \
         -ffast-math"
     )
+if (PS2)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=r5900 -Wextra -Winline -O2 -fomit-frame-pointer -D_GNU_SOURCE=1")
+    set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} -g")
+endif()
 endif()
 
 # Support cross compiling
+if(NOT PS2)
 option(FORCE_CROSSCOMPILE "Enable cross-compilation" OFF)
 if(FORCE_CROSSCOMPILE)
     set(CMAKE_CROSSCOMPILING ON)
@@ -228,14 +238,17 @@ else()
         set(CROSS_EXPORTS "")
     endif()
 endif()
+endif()
 
 set(PRBOOM_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 set(WAD_DATA prboom-plus.wad)
 set(WAD_DATA_PATH "${PRBOOM_OUTPUT_PATH}/${WAD_DATA}")
 
+if(NOT PS2)
 add_subdirectory(data)
 add_subdirectory(doc)
+endif()
 add_subdirectory(src)
 
 if(NOT CMAKE_CROSSCOMPILING)

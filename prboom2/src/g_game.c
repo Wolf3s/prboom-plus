@@ -275,6 +275,10 @@ int     joybstrafeleft;
 int     joybstraferight;
 int     joybuse;
 int     joybspeed;
+#ifdef _EE
+static int   joyxside;
+#endif
+
 
 #define MAXPLMOVE   (forwardmove[1])
 #define TURBOTHRESHOLD  0x32
@@ -521,7 +525,13 @@ void G_BuildTiccmd(ticcmd_t* cmd)
     }                                                             // phares
 
   // let movement keys cancel each other out
+#ifdef _EE
+  if(joyxside > 0)
+	  side += sidemove[speed];
 
+  if(joyxside < 0)
+	  side -= sidemove[speed];
+#endif
   if (strafe)
     {
       if (gamekeydown[key_right] || mousebuttons[mousebturnright])

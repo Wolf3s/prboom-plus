@@ -269,6 +269,27 @@ static int I_TranslateKey(SDL_Keysym* key)
 
 }
 
+#ifdef _EE
+// Map buttons to keys
+//
+static int I_TranslateButton(Uint8 button)
+{
+	int rc = 0;
+
+	switch(button)
+	{
+		case PS2_START:
+			rc = KEYD_ESCAPE;
+			break;
+
+		default:
+			rc = button;
+			break;
+	}
+	return rc;
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////////////////
 // Main input code
 
@@ -300,6 +321,19 @@ static void I_GetEvent(void)
 while (SDL_PollEvent(Event))
 {
   switch (Event->type) {
+#ifdef _EE
+  case SDL_JOYBUTTONDOWN:
+	  event.type = ev_keydown;
+	  event.data1 = I_TranslateButton(Event->jbutton.button);
+	  D_PostEvent(&event);
+	break;
+
+  case SDL_JOYBUTTONUP:
+	  event.type = ev_keyup;
+	  event.data1 = I_TranslateButton(Event->jbutton.button);
+	  D_PostEvent(&event);
+	break;
+#endif	    
   case SDL_KEYDOWN:
 #ifdef MACOSX
     if (Event->key.keysym.mod & KMOD_META)
@@ -1322,10 +1356,12 @@ void I_UpdateVideoMode(void)
   else
   {
     int flags = SDL_RENDERER_TARGETTEXTURE;
-
+#ifdef __PS2__ /* PS2 Currently supports software only */
+    flags |= SDL_RENDERER_SOFTWARE | SDL_RENDERER_PRESENTVSYNC; 
+#else
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
-
+#endif
     sdl_window = SDL_CreateWindow(
       PACKAGE_NAME " " PACKAGE_VERSION,
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,

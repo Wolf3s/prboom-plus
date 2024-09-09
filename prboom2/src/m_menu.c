@@ -4314,6 +4314,21 @@ int M_GetKeyString(int c,int offset)
       menu_buffer[offset]   = 0;
     } else {
       switch(c) {
+#ifdef _EE
+      case PS2_SQUARE:      s = "[]"; break;
+	  case PS2_CROSS:       s = "X"; break;
+	  case PS2_CIRCLE:      s = "O"; break;
+	  case PS2_TRIANGLE:    s = "/\\"; break;
+	  case PS2_SELECT:      s = "SEL"; break;
+	  case PS2_START:       s = "STA"; break;
+	  case PS2_L1:          s = "L1"; break;
+	  case PS2_R1:          s = "R1"; break;
+	  case PS2_L2:          s = "L2"; break;
+	  case PS2_R2:          s = "R2"; break;
+	  case PS2_L3:          s = "L3"; break;
+	  case PS2_R3:          s = "R3"; break;
+	  default:              s = "";   break;
+#else
       case KEYD_TAB:      s = "TAB";  break;
       case KEYD_ENTER:      s = "ENTR"; break;
       case KEYD_ESCAPE:     s = "ESC";  break;
@@ -4343,6 +4358,7 @@ int M_GetKeyString(int c,int offset)
       case KEYD_PRINTSC:    s = "PRSC"; break;
       case 0:               s = "NONE"; break;
       default:              s = "JUNK"; break;
+#endif
       }
 
       if (s) { // cph - Slight code change
