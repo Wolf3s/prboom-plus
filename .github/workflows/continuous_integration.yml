@@ -130,7 +130,7 @@ jobs:
 
     - name: Compile PS2
       run: |
-        cmake -S prboom2 -B build -DBUILD_GL=OFF -DSDL2_IMAGE_FOUND=ON -DSDL2_MIXER_FOUND=ON -DZLIB_FOUND=ON -DLIBMAD_FOUND=ON -DVORBIS_FOUND=ON "-DCMAKE_TOOLCHAIN_FILE=${PS2DEV}/share/ps2dev.cmake"
+        cmake -S prboom2 -B build -DBUILD_GL=OFF "-DCMAKE_TOOLCHAIN_FILE=${PS2DEV}/share/ps2dev.cmake"
         cmake --build build
 
     - name: Upload release artifact ELF

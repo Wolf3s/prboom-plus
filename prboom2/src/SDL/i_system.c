@@ -556,7 +556,7 @@ const char* I_FindFile2(const char* wfname, const char* ext)
   return (const char*) I_FindFileInternal(wfname, ext, true);
 }
 
-#elif defined(_EE)
+#elif defined(__PS2__)
 char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 {
   (void) isStatic;
