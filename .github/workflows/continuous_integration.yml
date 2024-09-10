@@ -7,7 +7,6 @@ on:
   pull_request:
     branches-ignore:
     - build_windows_dependencies
-
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -115,3 +114,29 @@ jobs:
       run: |
         git status
         ls -lR build
+        
+  build-ps2:
+    name: PS2 build
+
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:latest
+    steps:
+    - name: Install dependencies
+      run: |
+        apk add cmake build-base git zip gawk python3 py3-pip bash
+
+    - name: git checkout
+      uses: actions/checkout@v4
+
+    - name: Compile PS2
+      run: |
+        cmake -S prboom2 -B build -DBUILD_GL=OFF -DSDL2_IMAGE_FOUND=ON -DSDL2_MIXER_FOUND=ON -DZLIB_FOUND=ON -DLIBMAD_FOUND=ON -DVORBIS_FOUND=ON "-DCMAKE_TOOLCHAIN_FILE=${PS2DEV}/share/ps2dev.cmake"
+        cmake --build build
+
+    - name: Upload release artifact ELF
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: PRBOOM+
+        path: |
+          build/prboom-plus.elf
