@@ -314,20 +314,6 @@ typedef enum {
 #define KEYD_MWHEELUP   (0x80 + 0x6b)
 #define KEYD_MWHEELDOWN (0x80 + 0x6c)
 
-#ifdef __PS2__
-#define PS2_SQUARE 0
-#define PS2_CROSS 1
-#define PS2_CIRCLE 2
-#define PS2_TRIANGLE 3
-#define PS2_SELECT 4
-#define PS2_START 5
-#define PS2_L1 6
-#define PS2_R1 7
-#define PS2_L2 8
-#define PS2_R2 9
-#define PS2_L3 10
-#define PS2_R3 11
-#endif
 
 // phares 4/19/98:
 // Defines Setup Screen groups that config variables appear in.

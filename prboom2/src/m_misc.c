@@ -444,6 +444,9 @@ default_t defaults[] =
 #ifdef _WIN32
   {"snd_midiplayer",{NULL, &snd_midiplayer},{0,"fluidsynth"},UL,UL,def_str,ss_none},
   {"snd_soundfont",{NULL, &snd_soundfont},{0,"TimGM6mb.sf2"},UL,UL,def_str,ss_none}, // soundfont name for synths that support it
+#elif __PS2__ /*Hack: Add OPL2 sound. */
+  {"snd_midiplayer",{NULL, &snd_midiplayer},{0,"opl2"},UL,UL,def_str,ss_none},
+  {"snd_soundfont",{NULL, &snd_soundfont},{0,""},UL,UL,def_str,ss_none}, // soundfont name for synths that
 #else
   {"snd_midiplayer",{NULL, &snd_midiplayer},{0,"sdl"},UL,UL,def_str,ss_none},
   {"snd_soundfont",{NULL, &snd_soundfont},{0,"/usr/share/sounds/sf3/default-GM.sf3"},UL,UL,def_str,ss_none}, // soundfont name for synths that support it
@@ -471,8 +474,13 @@ default_t defaults[] =
    def_bool,ss_none},
   {"exclusive_fullscreen",{&exclusive_fullscreen},{0},0,1, // [FG] mode-changing fullscreen
   def_bool,ss_none},
+#ifdef __PS2__
+  {"render_vsync",{&render_vsync},{0},0,1,
+   def_bool,ss_none},
+#else
   {"render_vsync",{&render_vsync},{1},0,1,
    def_bool,ss_none},
+#endif
   {"translucency",{&default_translucency},{1},0,1,   // phares
    def_bool,ss_none}, // enables translucency
   {"tran_filter_pct",{&tran_filter_pct},{66},0,100,         // killough 2/21/98
@@ -619,20 +627,16 @@ default_t defaults[] =
 // CPhipps - now they're the doom codes, so default.cfg can be portable
 
   {"Key bindings",{NULL},{0},UL,UL,def_none,ss_none},
-#ifdef __PS2__
-  {"key_right",       {&key_right},          {-1},
-   0,MAX_KEY,def_key,ss_keys}, // key to turn right
-  {"key_left",        {&key_left},           {-1} ,
-   0,MAX_KEY,def_key,ss_keys}, // key to turn left
-  {"key_up",          {&key_up},             {-1}   ,
-   0,MAX_KEY,def_key,ss_keys}, // key to move forward
-  {"key_down",        {&key_down},           {-1},
-   0,MAX_KEY,def_key,ss_keys}, // key to move backward
-#else
   {"key_right",       {&key_right},          {KEYD_RIGHTARROW},
    0,MAX_KEY,def_key,ss_keys}, // key to turn right
   {"key_left",        {&key_left},           {KEYD_LEFTARROW} ,
    0,MAX_KEY,def_key,ss_keys}, // key to turn left
+#ifdef __PS2__
+  {"key_up",          {&key_up},             {KEYD_UPARROW}   ,
+   0,MAX_KEY,def_key,ss_keys}, // key to move forward
+  {"key_down",        {&key_down},           {KEYD_DOWNARROW},
+   0,MAX_KEY,def_key,ss_keys}, // key to move backward
+#else
   {"key_up",          {&key_up},             {'w'}   ,
    0,MAX_KEY,def_key,ss_keys}, // key to move forward
   {"key_down",        {&key_down},           {'s'},
@@ -650,131 +654,6 @@ default_t defaults[] =
    0,MAX_KEY,def_key,ss_keys}, // key to move up in a menu
   {"key_menu_down",   {&key_menu_down},      {KEYD_DOWNARROW} ,
    0,MAX_KEY,def_key,ss_keys}, // key to move down in a menu
-#ifdef __PS2__
-    {"key_menu_backspace",{&key_menu_backspace},{PS2_TRIANGLE} ,
-   0,MAX_KEY,def_key,ss_keys}, // delete key in a menu
-  {"key_menu_escape", {&key_menu_escape},    {PS2_SELECT}    ,
-   0,MAX_KEY,def_key,ss_keys}, // key to leave a menu      ,   // phares 3/7/98
-  {"key_menu_enter",  {&key_menu_enter},     {PS2_CROSS}     ,
-   0,MAX_KEY,def_key,ss_keys}, // key to select from menu
-  {"key_strafeleft",  {&key_strafeleft},     {PS2_L2}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to strafe left
-  {"key_straferight", {&key_straferight},    {PS2_R2}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to strafe right
-
-  {"key_fire",        {&key_fire},           {PS2_R1}     ,
-   0,MAX_KEY,def_key,ss_keys}, // duh
-  {"key_use",         {&key_use},            {PS2_L1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to open a door, use a switch
-  {"key_strafe",      {&key_strafe},         {-1}      ,
-   0,MAX_KEY,def_key,ss_keys}, // key to use with arrows to strafe
-  {"key_speed",       {&key_speed},          {PS2_L3}    ,
-   0,MAX_KEY,def_key,ss_keys}, // key to run
-
-  {"key_savegame",    {&key_savegame},       {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to save current game
-  {"key_loadgame",    {&key_loadgame},       {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to restore from saved games
-  {"key_soundvolume", {&key_soundvolume},    {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to bring up sound controls
-  {"key_hud",         {&key_hud},            {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to adjust HUD
-  {"key_quicksave",   {&key_quicksave},      {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to to quicksave
-  {"key_endgame",     {&key_endgame},        {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to end the game
-  {"key_messages",    {&key_messages},       {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle message enable
-  {"key_quickload",   {&key_quickload},      {-1}        ,
-   0,MAX_KEY,def_key,ss_keys}, // key to load from quicksave
-  {"key_quit",        {&key_quit},           {-1}       ,
-   0,MAX_KEY,def_key,ss_keys}, // key to quit game
-  {"key_gamma",       {&key_gamma},          {-1}       ,
-   0,MAX_KEY,def_key,ss_keys}, // key to adjust gamma correction
-  {"key_spy",         {&key_spy},            {-1}       ,
-   0,MAX_KEY,def_key,ss_keys}, // key to view from another coop player's view
-  {"key_pause",       {&key_pause},          {-1}     ,
-   0,MAX_KEY,def_key,ss_keys}, // key to pause the game
-  {"key_autorun",     {&key_autorun},        {-1}  ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle always run mode
-  {"key_chat",        {&key_chat},           {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to enter a chat message
-  {"key_backspace",   {&key_backspace},      {-1} ,
-   0,MAX_KEY,def_key,ss_keys}, // backspace key
-  {"key_enter",       {&key_enter},          {-1}     ,
-   0,MAX_KEY,def_key,ss_keys}, // key to select from menu or see last message
-  {"key_map",         {&key_map},            {-1}       ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle automap display
-  {"key_map_right",   {&key_map_right},      {PS2_SQUARE},// phares 3/7/98
-   0,MAX_KEY,def_key,ss_keys}, // key to shift automap right   //     |
-  {"key_map_left",    {&key_map_left},       {-1} ,//     V
-   0,MAX_KEY,def_key,ss_keys}, // key to shift automap left
-  {"key_map_up",      {&key_map_up},         {-1}   ,
-   0,MAX_KEY,def_key,ss_keys}, // key to shift automap up
-  {"key_map_down",    {&key_map_down},       {-1} ,
-   0,MAX_KEY,def_key,ss_keys}, // key to shift automap down
-  {"key_map_zoomin",  {&key_map_zoomin},      {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to enlarge automap
-  {"key_map_zoomout", {&key_map_zoomout},     {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to reduce automap
-  {"key_map_gobig",   {&key_map_gobig},       {-1}           ,
-   0,MAX_KEY,def_key,ss_keys},  // key to get max zoom for automap
-  {"key_map_follow",  {&key_map_follow},      {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle follow mode
-  {"key_map_mark",    {&key_map_mark},        {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to drop a marker on automap
-  {"key_map_clear",   {&key_map_clear},       {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to clear all markers on automap
-  {"key_map_grid",    {&key_map_grid},        {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle grid display over automap
-  {"key_map_rotate",  {&key_map_rotate},      {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle rotating the automap to match the player's orientation
-  {"key_map_overlay", {&key_map_overlay},     {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle overlaying the automap on the rendered display
-  {"key_reverse",     {&key_reverse},         {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to spin 180 instantly
-  {"key_zoomin",      {&key_zoomin},          {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to enlarge display
-  {"key_zoomout",     {&key_zoomout},         {-1}           ,
-   0,MAX_KEY,def_key,ss_keys}, // key to reduce display
-  {"key_chatplayer1", {&destination_keys[0]}, {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to chat with player 1
-  // killough 11/98: fix 'i'/'b' reversal
-  {"key_chatplayer2", {&destination_keys[1]}, {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to chat with player 2
-  {"key_chatplayer3", {&destination_keys[2]}, {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to chat with player 3
-  {"key_chatplayer4", {&destination_keys[3]}, {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to chat with player 4
-  {"key_weapontoggle",{&key_weapontoggle},    {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to toggle between two most preferred weapons with ammo
-  {"key_weapon1",     {&key_weapon1},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 1 (fist/chainsaw)
-  {"key_weapon2",     {&key_weapon2},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 2 (pistol)
-  {"key_weapon3",     {&key_weapon3},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 3 (supershotgun/shotgun)
-  {"key_weapon4",     {&key_weapon4},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 4 (chaingun)
-  {"key_weapon5",     {&key_weapon5},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 5 (rocket launcher)
-  {"key_weapon6",     {&key_weapon6},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 6 (plasma rifle)
-  {"key_weapon7",     {&key_weapon7},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 7 (bfg9000)         //    ^
-  {"key_weapon8",     {&key_weapon8},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 8 (chainsaw)        //    |
-  {"key_weapon9",     {&key_weapon9},         {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to switch to weapon 9 (supershotgun)    // phares
-
-  // killough 2/22/98: screenshot key
-  {"key_screenshot",  {&key_screenshot},      {-1}            ,
-   0,MAX_KEY,def_key,ss_keys}, // key to take a screenshot
-
-  {"Joystick settings",{NULL},{0},UL,UL,def_none,ss_none},
-  {"use_joystick",{&usejoystick},{1},0,2,
-   def_int,ss_none}, // number of joystick to use (0 for none)
-#else
   {"key_menu_backspace",{&key_menu_backspace},{KEYD_BACKSPACE} ,
    0,MAX_KEY,def_key,ss_keys}, // delete key in a menu
   {"key_menu_escape", {&key_menu_escape},    {KEYD_ESCAPE}    ,
@@ -794,10 +673,17 @@ default_t defaults[] =
   {"key_flydown", {&key_flydown}, {','},
    0,MAX_KEY,def_key,ss_keys}, // key to strafe right
 
+#ifdef __PS2__
+  {"key_fire",        {&key_fire},           {KEYD_RCTRL}     ,
+   0,MAX_KEY,def_key,ss_keys}, // duh
+  {"key_use",         {&key_use},            {KEYD_BACKSPACE}           ,
+   0,MAX_KEY,def_key,ss_keys}, // key to open a door, use a switch
+#else
   {"key_fire",        {&key_fire},           {KEYD_RCTRL}     ,
    0,MAX_KEY,def_key,ss_keys}, // duh
   {"key_use",         {&key_use},            {' '}           ,
    0,MAX_KEY,def_key,ss_keys}, // key to open a door, use a switch
+#endif
   {"key_strafe",      {&key_strafe},         {KEYD_RALT}      ,
    0,MAX_KEY,def_key,ss_keys}, // key to use with arrows to strafe
   {"key_speed",       {&key_speed},          {KEYD_RSHIFT}    ,
@@ -908,8 +794,10 @@ default_t defaults[] =
   // killough 2/22/98: screenshot key
   {"key_screenshot",  {&key_screenshot},      {'*'}            ,
    0,MAX_KEY,def_key,ss_keys}, // key to take a screenshot
-
   {"Joystick settings",{NULL},{0},UL,UL,def_none,ss_none},
+#ifdef __PS2__
+  {"use_joystick",{&usejoystick},{1},0,2, def_int,ss_none}, // number of joystick to use (0 for none)
+#else
   {"use_joystick",{&usejoystick},{0},0,2,
    def_int,ss_none}, // number of joystick to use (0 for none)
 #endif

@@ -586,6 +586,10 @@ void I_SetProcessPriority(void)
   }
 }
 
+#if defined(__PS2__) && defined(__PS2CLIENT__) /* PS2CLIENT */
+SDL_PS2_SKIP_IOP_RESET();
+#endif
+
 //int main(int argc, const char * const * argv)
 int main(int argc, char **argv)
 {

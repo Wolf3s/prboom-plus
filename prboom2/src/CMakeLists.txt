@@ -430,9 +430,7 @@ else()
 AddGameExecutable(prboom-plus "${PRBOOM_PLUS_SOURCES}")
 endif()
 # PrBoom-Plus server executable
-if(NOT PS2)
-    set(BUILD_SERVER OFF)
-endif()
+set(BUILD_SERVER OFF)
 
 option(BUILD_SERVER "Build PrBoom-Plus server executable" ON)
 

@@ -47,6 +47,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef __PS2__
+#include "m_io.h"
+#endif
 #include "doomtype.h"
 #include "lprintf.h"
 #include "i_main.h"
@@ -74,11 +77,33 @@ int lprintf(OutputLevels pri, const char *s, ...)
   doom_vsnprintf(msg,sizeof(msg),s,v);    /* print message in buffer  */
   va_end(v);
 
+#ifdef __PS2__ 
+  FILE *fout;
+  fout = M_fopen("prboom-plus.log", "a");
+  if (fout)
+  {
+    fprintf(fout, "%s", msg);
+    fclose(fout);
+  }
+#endif
+
   if (lvl&cons_output_mask)               /* mask output as specified */
   {
 #ifdef _WIN32
     // do not crash with unicode dirs
     if (fileno(stdout) != -1)
+#elif defined(__PS2__)
+  {
+    char fname[256];
+    FILE *fout;
+    doom_snprintf(fname, sizeof(fname), "%s/prboom-plus-error.log", I_DoomExeDir());
+    fout = M_fopen(fname, "w");
+    if (fout)
+    {
+      fprintf(fout, "FATAL ERROR:\n%s\n", msg);
+      fclose(fout);
+    }
+  }
 #endif
     r=fprintf(stdout,"%s",msg);
   }

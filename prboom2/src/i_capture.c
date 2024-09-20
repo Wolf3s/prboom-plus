@@ -328,6 +328,20 @@ typedef struct
   int pid;
 } puser_t;
 
+#ifdef __PS2__
+int     pipe (int __fildes[2])
+{
+  (void)__fildes[2];
+  return 0;
+}
+
+pid_t waitpid (pid_t, int *, int)
+{
+  
+  return 0;
+}
+
+#endif
 
 static int my_popen3 (pipeinfo_t *p)
 {
@@ -354,7 +368,6 @@ static int my_popen3 (pipeinfo_t *p)
 
 
   // make the pipes
-#ifdef __PS2TODO__
   if (pipe (scratch))
     goto fail;
   child_hin = scratch[0];
@@ -365,7 +378,6 @@ static int my_popen3 (pipeinfo_t *p)
   child_hout = scratch[1];
   if (pipe (scratch))
     goto fail;
-#endif
   parent_herr = scratch[0];
   child_herr = scratch[1];
 
@@ -441,9 +453,7 @@ static void my_pclose3 (pipeinfo_t *p)
   fclose (p->f_stdin);
   //fclose (p->f_stdout); // these are closed elsewhere
   //fclose (p->f_stderr);
-#ifdef __PS2TODO__
   waitpid (puser->pid, &s, 0);
-#endif
 
   free (puser);
 }

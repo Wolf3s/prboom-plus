@@ -559,7 +559,6 @@ const char* I_FindFile2(const char* wfname, const char* ext)
 #elif defined(__PS2__)
 char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 {
-  (void) isStatic;
 	int i;
 	/* Precalculate a length we will need in the loop */
 	size_t pl = strlen(wfname) + strlen(ext) + 4;
@@ -610,8 +609,11 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 		
 		if (!access(p, F_OK))
 		{
-			lprintf(LO_INFO, " found %s\n", p);
-			return p;
+      if(isStatic) 
+      {
+			  lprintf(LO_INFO, " found %s\n", p);
+      }
+      return p;
 		}
 		
 		free(p);

@@ -275,7 +275,7 @@ int     joybstrafeleft;
 int     joybstraferight;
 int     joybuse;
 int     joybspeed;
-#ifdef _EE
+#ifdef __PS2__
 static int   joyxside;
 #endif
 
@@ -525,7 +525,7 @@ void G_BuildTiccmd(ticcmd_t* cmd)
     }                                                             // phares
 
   // let movement keys cancel each other out
-#ifdef _EE
+#ifdef __PS2__
   if(joyxside > 0)
 	  side += sidemove[speed];
 
@@ -570,7 +570,6 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
     // buttons
   cmd->chatchar = HU_dequeueChatChar();
-
   if (gamekeydown[key_fire] || mousebuttons[mousebfire] ||
       joybuttons[joybfire])
     cmd->buttons |= BT_ATTACK;

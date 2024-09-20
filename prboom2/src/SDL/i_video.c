@@ -269,7 +269,7 @@ static int I_TranslateKey(SDL_Keysym* key)
 
 }
 
-#ifdef _EE
+#ifdef __PS2__
 // Map buttons to keys
 //
 static int I_TranslateButton(Uint8 button)
@@ -278,13 +278,53 @@ static int I_TranslateButton(Uint8 button)
 
 	switch(button)
 	{
-		case PS2_START:
+		case SDL_CONTROLLER_BUTTON_START:
 			rc = KEYD_ESCAPE;
 			break;
 
-		default:
+    case SDL_CONTROLLER_BUTTON_A:
+      rc  = KEYD_ENTER;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_B:
+      rc  = KEYD_BACKSPACE;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_Y:
+      rc  = KEYD_TAB;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_X:
+      rc  = KEYD_RCTRL;
+      break;
+      
+    case SDL_CONTROLLER_BUTTON_DPAD_UP:
+      rc  = KEYD_UPARROW;
+      break;		
+
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+      rc  = KEYD_DOWNARROW;
+      break;				      
+
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+      rc  = KEYD_RIGHTARROW;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+      rc  = KEYD_LEFTARROW;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+      rc  = KEYD_MWHEELDOWN;
+      break;
+
+    case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+      rc  = KEYD_MWHEELUP;
+      break;
+            
+    default:
 			rc = button;
-			break;
+	    break;
 	}
 	return rc;
 }
@@ -321,16 +361,11 @@ static void I_GetEvent(void)
 while (SDL_PollEvent(Event))
 {
   switch (Event->type) {
-#ifdef _EE
-  case SDL_JOYBUTTONDOWN:
-	  event.type = ev_keydown;
-	  event.data1 = I_TranslateButton(Event->jbutton.button);
-	  D_PostEvent(&event);
-	break;
-
-  case SDL_JOYBUTTONUP:
-	  event.type = ev_keyup;
-	  event.data1 = I_TranslateButton(Event->jbutton.button);
+#ifdef __PS2__
+  case SDL_CONTROLLERBUTTONDOWN:
+  case SDL_CONTROLLERBUTTONUP:
+	  event.type = Event->cbutton.state == SDL_PRESSED ? ev_keydown : ev_keyup;
+	  event.data1 = I_TranslateButton(Event->cbutton.button);
 	  D_PostEvent(&event);
 	break;
 #endif	    
@@ -1357,17 +1392,20 @@ void I_UpdateVideoMode(void)
   {
     int flags = SDL_RENDERER_TARGETTEXTURE;
 #ifdef __PS2__ /* PS2 Currently supports software only */
-    flags |= SDL_RENDERER_SOFTWARE | SDL_RENDERER_PRESENTVSYNC; 
-#else
+    flags |= SDL_RENDERER_SOFTWARE; 
+#endif
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
-#endif
+
     sdl_window = SDL_CreateWindow(
       PACKAGE_NAME " " PACKAGE_VERSION,
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       SCREENWIDTH, SCREENHEIGHT,
       init_flags);
     sdl_renderer = SDL_CreateRenderer(sdl_window, -1, flags);
+#ifdef __PS2__
+    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
+#endif
 
     // [FG] aspect ratio correction for the canonical video modes
     if (SCREENHEIGHT == 200 || SCREENHEIGHT == 400)
