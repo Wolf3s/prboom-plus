@@ -563,12 +563,12 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 	/* Precalculate a length we will need in the loop */
 	size_t pl = strlen(wfname) + strlen(ext) + 4;
 	
-	for(i = 0; i < 5; i++)
+	for(i = 0; i < 7; i++)
 	{
 		char * p;
 		const char * d = NULL;
 		const char * s = NULL;
-		
+
 		/* Each entry in the switch sets d to directory to look in
 		* and optionally s to a subdirectory of d*/
 		switch(i)
@@ -592,8 +592,16 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 			case 4:
 			  d = "cdrom:\\";
 			  break;
-			  
-			case 5:
+
+      case 5:
+			  d = "mc0:/"
+			  break;
+
+  		case 6:
+			  d = "mc1:/"
+			  break;
+
+			case 7:
 			  d = I_DoomExeDir();
 			  break;
 			
