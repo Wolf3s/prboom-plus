@@ -1,6 +1,6 @@
 # PRBOOM-PLUS For PlayStation 2
 
-![Raw level geometry](https://raw.githubusercontent.com/Wolf3s/prboom-plus/ps2/img/Doom-Screen.png "Raw level geometry")
+![DOOM Screenshot taken on pcsx2](https://raw.githubusercontent.com/Wolf3s/prboom-plus/ps2/img/Doom-Screen.png "Raw level geometry")
 
 This is a homebrew port of the game doom, targeting the PS2 Console, Using PrBoom-Plus
 as base.
