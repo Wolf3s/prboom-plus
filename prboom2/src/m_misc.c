@@ -469,18 +469,17 @@ default_t defaults[] =
   {"Video settings",{NULL},{0},UL,UL,def_none,ss_none},
   {"videomode",{NULL, &default_videomode},{0,"8bit"},UL,UL,def_str,ss_none},
   /* 640x480 default resolution */
+#ifdef __PS2__
+  {"screen_resolution",{NULL, &screen_resolution},{0,"320x200"},UL,UL,def_str,ss_none},
+#else
   {"screen_resolution",{NULL, &screen_resolution},{0,"640x480"},UL,UL,def_str,ss_none},
+#endif
   {"use_fullscreen",{&use_fullscreen},{0},0,1, /* proff 21/05/2000 */
    def_bool,ss_none},
   {"exclusive_fullscreen",{&exclusive_fullscreen},{0},0,1, // [FG] mode-changing fullscreen
   def_bool,ss_none},
-#ifdef __PS2__
-  {"render_vsync",{&render_vsync},{0},0,1,
-   def_bool,ss_none},
-#else
   {"render_vsync",{&render_vsync},{1},0,1,
    def_bool,ss_none},
-#endif
   {"translucency",{&default_translucency},{1},0,1,   // phares
    def_bool,ss_none}, // enables translucency
   {"tran_filter_pct",{&tran_filter_pct},{66},0,100,         // killough 2/21/98

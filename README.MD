@@ -13,9 +13,9 @@ My goal is to make a definitive doom playstation 2 port replacing the [prboom li
 
 ## TODO
 
-- Optimize to ensure smooth gameplay
 - Fix SDL_GameController on Real Hardware
 - Add L3 and R3 for movements
+- Fix doom(guy/slayer) above
 
 ## License
 

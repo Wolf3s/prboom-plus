@@ -1390,22 +1390,22 @@ void I_UpdateVideoMode(void)
   }
   else
   {
+#ifdef __PS2__
+    int flags = SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_ACCELERATED;
+#else
     int flags = SDL_RENDERER_TARGETTEXTURE;
-#ifdef __PS2__ /* PS2 Currently supports software only */
-    flags |= SDL_RENDERER_SOFTWARE; 
 #endif
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
-
+#ifdef __PS2__
+    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
+#endif
     sdl_window = SDL_CreateWindow(
       PACKAGE_NAME " " PACKAGE_VERSION,
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       SCREENWIDTH, SCREENHEIGHT,
       init_flags);
     sdl_renderer = SDL_CreateRenderer(sdl_window, -1, flags);
-#ifdef __PS2__
-    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
-#endif
 
     // [FG] aspect ratio correction for the canonical video modes
     if (SCREENHEIGHT == 200 || SCREENHEIGHT == 400)
@@ -1438,9 +1438,11 @@ void I_UpdateVideoMode(void)
     screen = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, V_GetNumPixelBits(), 0, 0, 0, 0);
     buffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 32, 0, 0, 0, 0);
     SDL_FillRect(buffer, NULL, 0);
-
+#ifdef __PS2__
+    sdl_texture = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
+#else
     sdl_texture = SDL_CreateTextureFromSurface(sdl_renderer, buffer);
-
+#endif
     if(screen == NULL) {
       I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
     }
