@@ -328,21 +328,6 @@ typedef struct
   int pid;
 } puser_t;
 
-#ifdef __PS2__
-int     pipe (int __fildes[2])
-{
-  (void)__fildes[2];
-  return 0;
-}
-
-pid_t waitpid (pid_t, int *, int)
-{
-  
-  return 0;
-}
-
-#endif
-
 static int my_popen3 (pipeinfo_t *p)
 {
   FILE *fin = NULL;
@@ -366,7 +351,7 @@ static int my_popen3 (pipeinfo_t *p)
     return 0;
 
 
-
+  
   // make the pipes
   if (pipe (scratch))
     goto fail;
