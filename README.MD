@@ -8,14 +8,39 @@ as base.
 This port uses the unofficial [PS2DEV SDK](https://github.com/ps2dev/ps2dev) and [SDL2](https://github.com/libsdl-org/SDL) to provide rendering,
 input, audio and system functionalities for the id Tech 1 engine(Aka: DOOM1/2).
 
-This project is mostly done however due to PS2SDK not being stable there will be a not release.
+This project is mostly done however due to PS2SDK not being stable, there will be not a stable release.
 
 My goal is try to make a definitive doom playstation 2 port replacing the [prboom libretro port](https://www.youtube.com/watch?v=tFaTfBz_iUw&pp=ygUVcHJib29tIHBzMiB2cyBwczJkb29t) and [ps2doom port](https://www.youtube.com/watch?v=y6BXCzrufCk&t=601s) using only PS2SDK libraries.
 
-## TODO
+## How to run
+Pick the prboom-plus executable that can be found on releases section,
+unzip it then go to pcsx2 and execute the elf file or in real hardware transfer the folder unzipped to your pen-drive,
+run wLaunchELF and find the game on `mass0:` or `mc0:` if you transfer it, then hit the .ELF file and done.
 
-- Add L3 and R3 for movements.
+Note: 
+hdd and mc support is not tested(mc support should be work fine by the way, but don´t hesitate to contact me). 
+
+Mods:
+You can put doom mods by putting them on `prboom-plus/autoload`
+choose the folder for that mod(Example: `doom.wad/`) is based on and execute the .ELF file as usual.
+
+# Supported games:
+``` 
+DOOM 1, DOOM 2, PLUTONIA, TNT, FREEDOOM, BFG-DOOM, BFG-DOOM 2, HACX, Chex Quest and REKKR
+
+```
+
+## Controls:
+R1/L1: Change weapon
+Triangle: Automap
+Circle: Space/Open Doors
+Square: CTRL/Shoot
+DPad: Move
+Left Stick: Move
+
+## TODO
 - Fix bad scaled screen
+- Fix right stick which he´s being used by changing weapons
 
 ## License
 

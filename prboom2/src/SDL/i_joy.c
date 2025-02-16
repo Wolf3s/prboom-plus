@@ -120,7 +120,7 @@ void I_PollJoystick(void)
   event_t ev;
   Sint16 axis_value;
 #ifdef __PS2__
-  Sint16 xaxisl = SDL_CONTROLLER_AXIS_LEFTX, yaxisl, xaxisr;
+  Sint16 xaxisl, yaxisl, xaxisr;
   int i;
   int hat;
 #endif
@@ -129,16 +129,15 @@ void I_PollJoystick(void)
   // movement uses the old joystick system
   ev.type = ev_joystick;
   ev.data1 = 0;
-#if 0  
-  ev.data2 = JoystickMove(joyaxis_moveh);
-  ev.data3 = JoystickMove(joyaxis_movev);
+#if 0
+  ev.data2 = JoystickMove(joyleft);
+  ev.data3 = JoystickMove(joyright);
   D_PostEvent(&ev);
   // look translates to mouse motion
   ev.type = ev_mouse;
   ev.data1 = 0;
-  ev.data2 = JoystickLook(joyaxis_lookh);
-  ev.data3 = JoystickLook(joyaxis_lookv);
-  
+  ev.data2 = JoystickLook(joyup);
+  ev.data3 = JoystickLook(joydown);
 #endif
 
   xaxisl = SDL_GameControllerGetAxis(joystick, 0) / 3000;
