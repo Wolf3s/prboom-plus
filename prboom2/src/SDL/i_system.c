@@ -578,15 +578,15 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 			  break;
               
 			case 1:
-			  d = "host:"
+			  d = "host:";
 			  break;
 			
 			case 2:
-			  d = "hdd0:/+DOOM/"
+			  d = "hdd0:/+DOOM/";
 			  break;
 			
 			case 3:
-			  d = "mass:/"
+			  d = "mass:/";
 			  break;
 			  
 			case 4:
@@ -594,11 +594,11 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 			  break;
 
       case 5:
-			  d = "mc0:/"
+			  d = "mc0:/";
 			  break;
 
   		case 6:
-			  d = "mc1:/"
+			  d = "mc1:/";
 			  break;
 
 			case 7:
@@ -607,24 +607,21 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 			
 		}
 		
-		p = malloc((d ? strlen(d) : 0) + ( s ? strlen(s) :  0 + pl);
-		sprintf(p, "%s%s%s%s%s", d ? d : "", (d && !HasTrailingSlash(d)) ? "/" : ""),
-		        s ? s : "", (s && !HasTrailingSlash(s)) ? "/" : "",
-				wfname);
-		
-		if(access(p, F_OK))
-			strcat(p, ext);
-		
-		if (!access(p, F_OK))
-		{
-      if(isStatic) 
-      {
-			  lprintf(LO_INFO, " found %s\n", p);
-      }
+    if (!isStatic)
+      p = (char*)malloc((d ? strlen(d) : 0) + (s ? strlen(s) : 0) + pl);
+    sprintf(p, "%s%s%s%s%s", d ? d : "", (d && !HasTrailingSlash(d)) ? "/" : "",
+                             s ? s : "", (s && !HasTrailingSlash(s)) ? "/" : "",
+                             wfname);
+
+    if (ext && M_access(p,F_OK))
+      strcat(p, ext);
+    if (!M_access(p,F_OK)) {
+      if (!isStatic)
+        lprintf(LO_INFO, " found %s\n", p);
       return p;
-		}
-		
-		free(p);
+    }
+    if (!isStatic)
+      free(p);
 		
 	}
 	
