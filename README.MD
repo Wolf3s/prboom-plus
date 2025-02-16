@@ -5,8 +5,8 @@
 This is a homebrew port of the game doom, targeting to PS2, Using PrBoom-Plus
 as base.
 
-This port uses the unofficial [PS2DEV SDK](https://github.com/ps2dev) and SDL2 to provide rendering,
-input, audio and system services for the id Tech 1 engine(Aka: DOOM1/2).
+This port uses the unofficial [PS2DEV SDK](https://github.com/ps2dev/ps2dev) and [SDL2](https://github.com/libsdl-org/SDL) to provide rendering,
+input, audio and system functionalities for the id Tech 1 engine(Aka: DOOM1/2).
 
 This project is mostly done however due to PS2SDK not being stable there will be a not release.
 
