@@ -2,22 +2,20 @@
 
 ![DOOM Screenshot taken on pcsx2](https://raw.githubusercontent.com/Wolf3s/prboom-plus/ps2/img/Doom-Screen.png "Raw level geometry")
 
-This is a homebrew port of the game doom, targeting the PS2 Console, Using PrBoom-Plus
+This is a homebrew port of the game doom, targeting to PS2, Using PrBoom-Plus
 as base.
 
 This port uses the unofficial [PS2DEV SDK](https://github.com/ps2dev) and SDL2 to provide rendering,
 input, audio and system services for the id Tech 1 engine(Aka: DOOM1/2).
 
-This project is still in W.I.P, However Joysticks and Little changes on SDL2 is working
-on pcsx2.
+This project is mostly done however due to PS2SDK not being stable there will be a not release.
 
-My goal is to make a definitive doom playstation 2 port replacing the [prboom libretro port](https://www.youtube.com/watch?v=tFaTfBz_iUw&pp=ygUVcHJib29tIHBzMiB2cyBwczJkb29t) and [ps2doom port](https://www.youtube.com/watch?v=y6BXCzrufCk&t=601s) using only PS2SDK libraries.
+My goal is try to make a definitive doom playstation 2 port replacing the [prboom libretro port](https://www.youtube.com/watch?v=tFaTfBz_iUw&pp=ygUVcHJib29tIHBzMiB2cyBwczJkb29t) and [ps2doom port](https://www.youtube.com/watch?v=y6BXCzrufCk&t=601s) using only PS2SDK libraries.
 
 ## TODO
 
-- Fix SDL_GameController on Real Hardware
-- Add L3 and R3 for movements
-- Fix doom(guy/slayer) above
+- Add L3 and R3 for movements.
+- Fix bad scaled screen
 
 ## License
 
