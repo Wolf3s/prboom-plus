@@ -47,10 +47,17 @@
 #include "lprintf.h"
 #include "i_system.h"
 
+#ifdef __PS2__
+int joyaxis_moveh;
+int joyaxis_movev;
+int joyaxis_lookh;
+int joyaxis_lookv;
+#else
 int joyleft;
 int joyright;
 int joyup;
 int joydown;
+#endif
 
 int usejoystick;
 
@@ -92,7 +99,7 @@ static inline int JoystickMove(const int axis)
   {
     prev_axis[axis] = SDL_GameControllerGetAxis(joystick, axis);
     axis_value = prev_axis[axis] / 3000;
-    if (abs(axis_value) < 7) axis_value = 0;
+    if (D_abs(axis_value) < 7) axis_value = 0;
     return axis_value;
   }
   return 0;
@@ -129,44 +136,35 @@ void I_PollJoystick(void)
   // movement uses the old joystick system
   ev.type = ev_joystick;
   ev.data1 = 0;
-#if 0
-  ev.data2 = JoystickMove(joyleft);
-  ev.data3 = JoystickMove(joyright);
+  ev.data2 = JoystickMove(joyaxis_moveh);
+  ev.data3 = JoystickMove(joyaxis_movev);
   D_PostEvent(&ev);
   // look translates to mouse motion
   ev.type = ev_mouse;
   ev.data1 = 0;
-  ev.data2 = JoystickLook(joyup);
-  ev.data3 = JoystickLook(joydown);
+  ev.data2 = JoystickLook(joyaxis_lookh);
+  ev.data3 = JoystickLook(joyaxis_lookv);
+
+  if (ev.data2 || ev.data3) D_PostEvent(&ev);
+#if 0
+  // triggers generate keypresses
+  ev.data2 = ev.data3 = 0;
+  for (i = SDL_CONTROLLER_AXIS_TRIGGERLEFT; i <= SDL_CONTROLLER_AXIS_TRIGGERRIGHT; ++i)
+  {
+    axis_value = SDL_GameControllerGetAxis(joystick, i);
+    ev.data1 = KEYD_JOY_BASE + i;
+    if (axis_value >= TRIGGER_DEADZONE && prev_axis[i] < TRIGGER_DEADZONE)
+    {
+      ev.type = ev_keydown;
+      D_PostEvent(&ev);
+    }
+    else if (axis_value < TRIGGER_DEADZONE && prev_axis[i] >= TRIGGER_DEADZONE)
+    {
+      ev.type = ev_keyup;
+      D_PostEvent(&ev);
+    }
+  }
 #endif
-
-  xaxisl = SDL_GameControllerGetAxis(joystick, 0) / 3000;
-	
-  if(D_abs(xaxisl) < 3)
-	    ev.data1 = 0;
-	else if(xaxisl > 0)
-		ev.data1 = 1;
-	else
-		ev.data1 = -1;
-
-	yaxisl  = SDL_GameControllerGetAxis(joystick, 1) / 3000;
-	if(D_abs(yaxisl) < 2)
-		ev.data3 = 0;
-	else if(yaxisl > 0)
-		ev.data3 = 1;
-	else
-		ev.data3 = -1;
-
-	xaxisr = SDL_GameControllerGetAxis(joystick, 2) / 3000;
-	
-  if(D_abs(xaxisr) < 2)
-		ev.data2 = 0;
-	else if(xaxisr > 0)
-		ev.data2 = 1;
-	else
-		ev.data2 = -1;
-
-  D_PostEvent(&ev);
 #else
   ev.type = ev_joystick;
   ev.data1 =

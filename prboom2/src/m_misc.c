@@ -480,16 +480,26 @@ default_t defaults[] =
   def_bool,ss_none},
   {"render_vsync",{&render_vsync},{1},0,1,
    def_bool,ss_none},
+#ifdef __PS2__
+  {"translucency",{&default_translucency},{0},0,1,   // phares
+   def_bool,ss_none}, // enables translucency
+#else
   {"translucency",{&default_translucency},{1},0,1,   // phares
    def_bool,ss_none}, // enables translucency
+#endif
   {"tran_filter_pct",{&tran_filter_pct},{66},0,100,         // killough 2/21/98
    def_int,ss_none}, // set percentage of foreground/background translucency mix
   {"screenblocks",{&screenblocks},{10},3,11,  // killough 2/21/98: default to 10
    def_int,ss_none},
   {"usegamma",{&usegamma},{0},0,4, //jff 3/6/98 fix erroneous upper limit in range
    def_int,ss_none}, // gamma correction level // killough 1/18/98
+#ifdef __PS2__
+  {"uncapped_framerate", {&movement_smooth_default},  {0},0,1,
+   def_bool,ss_stat},
+#else
   {"uncapped_framerate", {&movement_smooth_default},  {1},0,1,
    def_bool,ss_stat},
+#endif
   {"filter_wall",{(int*)&drawvars.filterwall},{RDRAW_FILTER_POINT},
    RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int,ss_none},
   {"filter_floor",{(int*)&drawvars.filterfloor},{RDRAW_FILTER_POINT},
@@ -796,10 +806,13 @@ default_t defaults[] =
   {"Joystick settings",{NULL},{0},UL,UL,def_none,ss_none},
 #ifdef __PS2__
   {"use_joystick",{&usejoystick},{1},0,2, def_int,ss_none}, // number of joystick to use (0 for none)
+  {"joyaxis_moveh",{&joyaxis_moveh},{0},UL,UL,def_int,ss_none},
+  {"joyaxis_movev",{&joyaxis_movev},{1},UL,UL,def_int,ss_none},
+  {"joyaxis_lookh",{&joyaxis_lookh},{2},UL,UL,def_int,ss_none},
+  {"joyaxis_lookv",{&joyaxis_lookv},{3},UL,UL,def_int,ss_none},  
 #else
   {"use_joystick",{&usejoystick},{0},0,2,
    def_int,ss_none}, // number of joystick to use (0 for none)
-#endif
   {"joy_left",{&joyleft},{0},  UL,UL,def_int,ss_none},
   {"joy_right",{&joyright},{0},UL,UL,def_int,ss_none},
   {"joy_up",  {&joyup},  {0},  UL,UL,def_int,ss_none},
@@ -816,7 +829,7 @@ default_t defaults[] =
    def_int,ss_keys}, // joystick button number to use for running
   {"joyb_use",{&joybuse},{3},0,UL,
    def_int,ss_keys}, // joystick button number to use for use/open
-
+#endif
   {"Chat macros",{NULL},{0},UL,UL,def_none,ss_none},
   {"chatmacro0", {0,&chat_macros[0]}, {0,HUSTR_CHATMACRO0},UL,UL,
    def_str,ss_chat}, // chat string associated with 0 key

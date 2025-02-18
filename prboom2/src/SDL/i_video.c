@@ -1397,16 +1397,18 @@ void I_UpdateVideoMode(void)
 #endif
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
-#ifdef __PS2__
-    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
-#endif
     sdl_window = SDL_CreateWindow(
       PACKAGE_NAME " " PACKAGE_VERSION,
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       SCREENWIDTH, SCREENHEIGHT,
       init_flags);
     sdl_renderer = SDL_CreateRenderer(sdl_window, -1, flags);
-
+#ifdef __PS2__ /* NOTE: PCSX2 says that: SDL apaently is using about 5% GPU or VU´S(Software Rendering) */
+    if (render_vsync == 1)
+    {
+      SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "-1");
+    }
+#endif
     // [FG] aspect ratio correction for the canonical video modes
     if (SCREENHEIGHT == 200 || SCREENHEIGHT == 400)
     {
