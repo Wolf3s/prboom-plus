@@ -388,6 +388,7 @@ function(AddGameExecutable TARGET SOURCES)
         gskit
         dmakit
         dma
+        xmp
         ps2_drivers
         patches
         config

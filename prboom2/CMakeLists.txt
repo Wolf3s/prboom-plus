@@ -218,7 +218,7 @@ else()
         -ffast-math"
     )
 if (PS2)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=r5900 -Wextra -Winline -O3 -g -fomit-frame-pointer -D_GNU_SOURCE=1")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wincompatible-pointer-types -march=r5900 -Wextra -Winline -O3 -g -fomit-frame-pointer -D_GNU_SOURCE=1")
     set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} -g")
 endif()
 endif()

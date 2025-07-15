@@ -1406,7 +1406,7 @@ void I_UpdateVideoMode(void)
 #ifdef __PS2__ /* NOTE: PCSX2 says that: SDL apaently is using about 5% GPU or VU´S(Software Rendering) */
     if (render_vsync == 1)
     {
-      SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "-1");
+      SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
     }
 #endif
     // [FG] aspect ratio correction for the canonical video modes

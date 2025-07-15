@@ -227,8 +227,6 @@ void I_InitJoystick(void)
     lprintf(LO_INFO, "%sopened %s\n", fname, SDL_GameControllerName(joystick));
 #else
     lprintf(LO_INFO, "%sopened %s\n", fname, SDL_JoystickName(joystick));
-#endif
-#ifndef __PS2__
     joyup = 32767;
     joydown = -32768;
     joyright = 32767;
