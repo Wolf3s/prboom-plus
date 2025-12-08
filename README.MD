@@ -36,10 +36,9 @@ Triangle: Automap
 Circle: Space/Open Doors
 Square: CTRL/Shoot
 DPad: Move
-Left Stick: Move
 
 ## TODO
-- Fix right stick which he´s being used by changing weapons
+- Add a proper Trigger, Axis support
 
 ## License
 
