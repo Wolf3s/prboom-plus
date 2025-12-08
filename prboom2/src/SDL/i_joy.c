@@ -146,25 +146,6 @@ void I_PollJoystick(void)
   ev.data3 = JoystickLook(joyaxis_lookv);
 
   if (ev.data2 || ev.data3) D_PostEvent(&ev);
-#if 0
-  // triggers generate keypresses
-  ev.data2 = ev.data3 = 0;
-  for (i = SDL_CONTROLLER_AXIS_TRIGGERLEFT; i <= SDL_CONTROLLER_AXIS_TRIGGERRIGHT; ++i)
-  {
-    axis_value = SDL_GameControllerGetAxis(joystick, i);
-    ev.data1 = KEYD_JOY_BASE + i;
-    if (axis_value >= TRIGGER_DEADZONE && prev_axis[i] < TRIGGER_DEADZONE)
-    {
-      ev.type = ev_keydown;
-      D_PostEvent(&ev);
-    }
-    else if (axis_value < TRIGGER_DEADZONE && prev_axis[i] >= TRIGGER_DEADZONE)
-    {
-      ev.type = ev_keyup;
-      D_PostEvent(&ev);
-    }
-  }
-#endif
 #else
   ev.type = ev_joystick;
   ev.data1 =
@@ -202,7 +183,7 @@ void I_InitJoystick(void)
   SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 #endif
   num_joysticks=SDL_NumJoysticks();
-#ifdef __PS2
+#ifdef __PS2__
   if ((usejoystick>num_joysticks) || (usejoystick <= 0) || !SDL_IsGameController(usejoystick-1)) {
 #else
   if (M_CheckParm("-nojoy") || (usejoystick>num_joysticks) || (usejoystick<0)) {

@@ -282,7 +282,7 @@ static int I_TranslateButton(Uint8 button)
 			rc = KEYD_ESCAPE;
 			break;
 
-    case SDL_CONTROLLER_BUTTON_A:
+    case SDL_CONTROLLER_BUTTON_X:
       rc  = KEYD_ENTER;
       break;
 
@@ -294,7 +294,7 @@ static int I_TranslateButton(Uint8 button)
       rc  = KEYD_TAB;
       break;
 
-    case SDL_CONTROLLER_BUTTON_X:
+    case SDL_CONTROLLER_BUTTON_A:
       rc  = KEYD_RCTRL;
       break;
       
@@ -1439,13 +1439,13 @@ void I_UpdateVideoMode(void)
 
     screen = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, V_GetNumPixelBits(), 0, 0, 0, 0);
 #ifdef __PS2__
-    buffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 15, 0, 0, 0, 0);
+    buffer = SDL_CreateRGBSurfaceWithFormat(0, SCREENWIDTH, SCREENHEIGHT, 32, SDL_PIXELFORMAT_ABGR1555);
 #else
     buffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 32, 0, 0, 0, 0);
 #endif
     SDL_FillRect(buffer, NULL, 0);
 #ifdef __PS2__
-    sdl_texture = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_ARGB1555, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
+    sdl_texture = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_ABGR1555 , SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
 #else
     sdl_texture = SDL_CreateTextureFromSurface(sdl_renderer, buffer);
 #endif

@@ -39,7 +39,6 @@ DPad: Move
 Left Stick: Move
 
 ## TODO
-- Fix bad scaled screen
 - Fix right stick which he´s being used by changing weapons
 
 ## License
