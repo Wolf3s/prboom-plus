@@ -275,9 +275,6 @@ int     joybstrafeleft;
 int     joybstraferight;
 int     joybuse;
 int     joybspeed;
-#ifdef __PS2__
-static int   joyxside;
-#endif
 
 
 #define MAXPLMOVE   (forwardmove[1])
@@ -525,13 +522,6 @@ void G_BuildTiccmd(ticcmd_t* cmd)
     }                                                             // phares
 
   // let movement keys cancel each other out
-#ifdef __PS2__
-  if(joyxside > 0)
-	  side += sidemove[speed];
-
-  if(joyxside < 0)
-	  side -= sidemove[speed];
-#endif
   if (strafe)
     {
       if (gamekeydown[key_right] || mousebuttons[mousebturnright])

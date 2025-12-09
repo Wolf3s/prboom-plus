@@ -38,17 +38,10 @@ extern int joybstraferight;
 extern int joybuse;
 extern int joybspeed;
 
-#ifdef __PS2__
-extern int joyaxis_moveh;
-extern int joyaxis_movev;
-extern int joyaxis_lookh;
-extern int joyaxis_lookv;
-#else
 extern int joyleft;
 extern int joyright;
 extern int joyup;
 extern int joydown;
-#endif
 
 extern int usejoystick;
 

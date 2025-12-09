@@ -47,17 +47,10 @@
 #include "lprintf.h"
 #include "i_system.h"
 
-#ifdef __PS2__
-int joyaxis_moveh;
-int joyaxis_movev;
-int joyaxis_lookh;
-int joyaxis_lookv;
-#else
 int joyleft;
 int joyright;
 int joyup;
 int joydown;
-#endif
 
 int usejoystick;
 
@@ -136,14 +129,14 @@ void I_PollJoystick(void)
   // movement uses the old joystick system
   ev.type = ev_joystick;
   ev.data1 = 0;
-  ev.data2 = JoystickMove(joyaxis_moveh);
-  ev.data3 = JoystickMove(joyaxis_movev);
+  ev.data2 = JoystickMove(joyleft);
+  ev.data3 = JoystickMove(joyright);
   D_PostEvent(&ev);
   // look translates to mouse motion
   ev.type = ev_mouse;
   ev.data1 = 0;
-  ev.data2 = JoystickLook(joyaxis_lookh);
-  ev.data3 = JoystickLook(joyaxis_lookv);
+  ev.data2 = JoystickLook(joyup);
+  ev.data3 = JoystickLook(joydown);
 
   if (ev.data2 || ev.data3) D_PostEvent(&ev);
 #else

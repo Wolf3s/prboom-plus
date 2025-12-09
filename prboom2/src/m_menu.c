@@ -3331,7 +3331,9 @@ setup_menu_t gen_settings2[] = { // General Settings screen2
 
   {"Input Devices",                    S_SKIP|S_TITLE, m_null, G_X, G_Y+ 1*8},
   {"Enable Mouse",                     S_YESNO, m_null, G_X, G_Y+ 2*8, {"use_mouse"}},
+#ifndef __PS2__
   {"Enable Joystick",                  S_YESNO, m_null, G_X, G_Y+ 3*8, {"use_joystick"}},
+#endif
 
   {"Files Preloaded at Game Startup",  S_SKIP|S_TITLE, m_null, G_X, G_Y + 5*8},
   {"WAD # 1",                          S_FILE, m_null, GF_X, G_Y+ 6*8, {"wadfile_1"}}, 

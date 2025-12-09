@@ -801,10 +801,10 @@ default_t defaults[] =
   {"Joystick settings",{NULL},{0},UL,UL,def_none,ss_none},
 #ifdef __PS2__
   {"use_joystick",{&usejoystick},{1},0,2, def_int,ss_none}, // number of joystick to use (0 for none)
-  {"joyaxis_moveh",{&joyaxis_moveh},{0},UL,UL,def_int,ss_none},
-  {"joyaxis_movev",{&joyaxis_movev},{1},UL,UL,def_int,ss_none},
-  {"joyaxis_lookh",{&joyaxis_lookh},{2},UL,UL,def_int,ss_none},
-  {"joyaxis_lookv",{&joyaxis_lookv},{3},UL,UL,def_int,ss_none},  
+  {"joy_left",{&joyleft},{0},  UL,UL,def_int,ss_none},
+  {"joy_right",{&joyright},{1},UL,UL,def_int,ss_none},
+  {"joy_up",  {&joyup},  {2},  UL,UL,def_int,ss_none},
+  {"joy_down",{&joydown},{3},  UL,UL,def_int,ss_none},
 #else
   {"use_joystick",{&usejoystick},{0},0,2,
    def_int,ss_none}, // number of joystick to use (0 for none)
@@ -812,6 +812,7 @@ default_t defaults[] =
   {"joy_right",{&joyright},{0},UL,UL,def_int,ss_none},
   {"joy_up",  {&joyup},  {0},  UL,UL,def_int,ss_none},
   {"joy_down",{&joydown},{0},  UL,UL,def_int,ss_none},
+#endif
   {"joyb_fire",{&joybfire},{0},0,UL,
    def_int,ss_keys}, // joystick button number to use for fire
   {"joyb_strafe",{&joybstrafe},{1},0,UL,
@@ -824,7 +825,7 @@ default_t defaults[] =
    def_int,ss_keys}, // joystick button number to use for running
   {"joyb_use",{&joybuse},{3},0,UL,
    def_int,ss_keys}, // joystick button number to use for use/open
-#endif
+
   {"Chat macros",{NULL},{0},UL,UL,def_none,ss_none},
   {"chatmacro0", {0,&chat_macros[0]}, {0,HUSTR_CHATMACRO0},UL,UL,
    def_str,ss_chat}, // chat string associated with 0 key
