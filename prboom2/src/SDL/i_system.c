@@ -582,7 +582,7 @@ char* I_FindFileInternal(const char* wfname, const char* ext, dboolean isStatic)
 			  break;
 			
 			case 2:
-			  d = "hdd0:/+DOOM/";
+			  d = "hdd0:/";
 			  break;
 			
 			case 3:
