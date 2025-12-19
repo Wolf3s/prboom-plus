@@ -1390,9 +1390,16 @@ void I_UpdateVideoMode(void)
   }
   else
   {
+#ifdef __PS2__
+  SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
+	SDL_SetHint(SDL_HINT_PS2_GS_WIDTH, "640");
+	SDL_SetHint(SDL_HINT_PS2_GS_HEIGHT, "480");    
+	SDL_SetHint(SDL_HINT_PS2_GS_MODE, "PAL");    
+#endif
     int flags = SDL_RENDERER_TARGETTEXTURE;
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
+
     sdl_window = SDL_CreateWindow(
       PACKAGE_NAME " " PACKAGE_VERSION,
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,

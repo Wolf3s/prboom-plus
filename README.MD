@@ -33,7 +33,6 @@ Cross: CTRL/Shoot \
 DPad: Move
 
 ## TODO
-- Add a proper Trigger, Axis support
 - Fix HDD Support
 
 ## License
