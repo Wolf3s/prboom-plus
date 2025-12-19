@@ -15,9 +15,6 @@ Pick the prboom-plus executable that can be found on releases section,
 unzip it then go to pcsx2 and execute the elf file or in real hardware transfer the folder unzipped to your pen-drive,
 run wLaunchELF and find the game on `mass0:` or `mc0:` if you transfer it, then hit the .ELF file and done.
 
-Note: 
-hdd and mc support is not tested(mc support should be work fine by the way, but don´t hesitate to contact me). 
-
 Mods:
 You can put doom mods by putting them on `prboom-plus/autoload`
 choose the folder for that mod(Example: `doom.wad/`) is based on and execute the .ELF file as usual.
@@ -37,6 +34,7 @@ DPad: Move
 
 ## TODO
 - Add a proper Trigger, Axis support
+- Fix HDD Support
 
 ## License
 
