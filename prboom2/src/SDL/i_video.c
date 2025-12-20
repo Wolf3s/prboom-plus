@@ -1394,7 +1394,6 @@ void I_UpdateVideoMode(void)
   SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
 	SDL_SetHint(SDL_HINT_PS2_GS_WIDTH, "640");
 	SDL_SetHint(SDL_HINT_PS2_GS_HEIGHT, "480");    
-	SDL_SetHint(SDL_HINT_PS2_GS_MODE, "PAL");    
 #endif
     int flags = SDL_RENDERER_TARGETTEXTURE;
     if (render_vsync && !novsync)
