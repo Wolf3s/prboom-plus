@@ -38,10 +38,13 @@
 #include "config.h"
 #endif
 
+#if defined(__PS2__) && defined(GL_DOOM)
+#include <GL/gl.h>
+#else
 #ifdef GL_DOOM
 #include <SDL_opengl.h>
 #endif
-
+#endif
 #include "doomtype.h"
 #include "v_video.h"
 #include "SDL.h"

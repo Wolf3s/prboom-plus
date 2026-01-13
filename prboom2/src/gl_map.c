@@ -101,7 +101,7 @@ void gld_InitMapPics(void)
       {
         glGenTextures(1, &am_icons[i].tex_id);
         glBindTexture(GL_TEXTURE_2D, am_icons[i].tex_id);
-
+#ifndef __PS2__
         if (gl_arb_texture_non_power_of_two)
         {
           glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -111,7 +111,7 @@ void gld_InitMapPics(void)
         {
           gluBuild2DMipmaps(GL_TEXTURE_2D, gl_tex_format, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
         }
-
+#endif
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);//tex_filter[MIP_PATCH].min_filter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//tex_filter[MIP_PATCH].mag_filter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);

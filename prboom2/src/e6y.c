@@ -40,8 +40,12 @@
 #include <direct.h>
 #include <winreg.h>
 #endif
+#if defined(__PS2__) && defined(GL_DOOM)
+#include <GL/gl.h>
+#else
 #ifdef GL_DOOM
 #include <SDL_opengl.h>
+#endif
 #endif
 #include <string.h>
 #include <math.h>

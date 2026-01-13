@@ -267,9 +267,10 @@ set(PRBOOM_PLUS_SOURCES
 )
 
 function(AddGameExecutable TARGET SOURCES)
-    if(OPENGL_FOUND AND OPENGL_GLU_FOUND)
+    if(PS2)
         set(SOURCES
             ${SOURCES}
+            ps2gl_wrapper.c
             gl_clipper.c
             gl_detail.c
             gl_drawinfo.c
@@ -409,7 +410,14 @@ function(AddGameExecutable TARGET SOURCES)
 
     install(TARGETS ${TARGET} COMPONENT "Game executable" RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
-    if(OPENGL_FOUND AND OPENGL_GLU_FOUND)
+
+    if(PS2)
+        target_compile_definitions(${TARGET} PRIVATE
+            GL_DOOM
+        )
+        target_link_libraries(${TARGET} PRIVATE -lps2stuff -lps2gl -lps2glut)
+
+    elseif(OPENGL_FOUND AND OPENGL_GLU_FOUND)
         target_compile_definitions(${TARGET} PRIVATE
             GL_DOOM
             USE_SHADERS

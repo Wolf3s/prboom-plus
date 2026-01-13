@@ -34,8 +34,11 @@
 #ifndef _GL_STRUCT_H
 #define _GL_STRUCT_H
 
+#if defined(GL_DOOM) &&defined(__PS2__)
+#include <GL/gl.h>
+#else
 #include <SDL_opengl.h>
-
+#endif
 extern int nodesVersion;
 
 typedef enum {

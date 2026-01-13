@@ -268,9 +268,10 @@ void gld_DrawStripsSky(void)
 
   if (gl_drawskys == skytype_standard)
   {
+#ifndef __PS2__
     if (comp[comp_skymap] && gl_shared_texture_palette)
       glDisable(GL_SHARED_TEXTURE_PALETTE_EXT);
-
+#endif
     if (comp[comp_skymap] && (invul_method & INVUL_BW))
       glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 
@@ -346,13 +347,13 @@ void gld_DrawStripsSky(void)
     glDisable(GL_TEXTURE_GEN_Q);
     glDisable(GL_TEXTURE_GEN_T);
     glDisable(GL_TEXTURE_GEN_S);
-
+#ifndef __PS2__
     if (comp[comp_skymap] && (invul_method & INVUL_BW))
       glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_COMBINE);
 
     if (comp[comp_skymap] && gl_shared_texture_palette)
       glEnable(GL_SHARED_TEXTURE_PALETTE_EXT);
-
+#endif
     SetFrameTextureMode();
   }
 }

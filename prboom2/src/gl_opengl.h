@@ -38,12 +38,15 @@
 #include "config.h"
 #endif
 
+#ifndef __PS2__
 #define USE_VERTEX_ARRAYS
+#endif
 //#define USE_VBO
 
 #include <SDL.h>
+#if !defined(__PS2__)
 #include <SDL_opengl.h>
-
+#endif
 #if SDL_VERSION_ATLEAST(1, 3, 0)
 #if defined(__MACOSX__)
 #include <OpenGL/gl.h>	/* Header File For The OpenGL Library */
@@ -51,6 +54,9 @@
 #elif defined(__MACOS__)
 #include <gl.h>		/* Header File For The OpenGL Library */
 #include <glu.h>	/* Header File For The GLU Library */
+#elif defined(__PS2__)
+#include <GL/gl.h>	/* Header File For The OpenGL Library */
+#include <GL/ps2gl.h>
 #else
 #include <GL/gl.h>	/* Header File For The OpenGL Library */
 #include <GL/glu.h>	/* Header File For The GLU Library */
@@ -103,6 +109,7 @@ extern dboolean gl_arb_pixel_buffer_object;
 extern dboolean gl_arb_shader_objects;
 
 // obsolete?
+#ifndef __PS2__
 extern PFNGLCOLORTABLEEXTPROC              GLEXT_glColorTableEXT;
 
 extern PFNGLBINDFRAMEBUFFEREXTPROC         GLEXT_glBindFramebufferEXT;
@@ -138,6 +145,7 @@ extern PFNGLBUFFERSUBDATAARBPROC           GLEXT_glBufferSubDataARB;
 extern PFNGLGETBUFFERPARAMETERIVARBPROC    GLEXT_glGetBufferParameterivARB;
 extern PFNGLMAPBUFFERARBPROC               GLEXT_glMapBufferARB;
 extern PFNGLUNMAPBUFFERARBPROC             GLEXT_glUnmapBufferARB;
+#endif
 
 /* GL_ARB_shader_objects */
 #ifdef USE_SHADERS

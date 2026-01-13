@@ -67,8 +67,9 @@
 **---------------------------------------------------------------------------
 **
 */
-
+#if !defined(GL_DOOM) && !defined(__PS2__)
 #include <SDL_opengl.h>
+#endif
 #include <math.h>
 #include "v_video.h"
 #include "gl_intern.h"

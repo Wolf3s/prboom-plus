@@ -170,6 +170,39 @@ void gld_ShutdownDetail(void)
 
 void gld_DrawTriangleStripARB(GLWall *wall, gl_strip_coords_t *c1, gl_strip_coords_t *c2)
 {
+#ifdef __PS2__
+  glBegin(GL_TRIANGLE_STRIP);
+
+  // lower left corner
+  glMultiTexCoord2fvARB(GL_TEXTURE0_ARB,(const GLfloat*)&c1->t[0]); 
+  glMultiTexCoord2fvARB(GL_TEXTURE1_ARB,(const GLfloat*)&c2->t[0]);
+  glVertex3fv((const GLfloat*)&c1->v[0]);
+
+  // split left edge of wall
+  //if (!wall->glseg->fracleft)
+  //  gld_SplitLeftEdge(wall, true);
+
+  // upper left corner
+  glMultiTexCoord2fvARB(GL_TEXTURE0_ARB,(const GLfloat*)&c1->t[1]);
+  glMultiTexCoord2fvARB(GL_TEXTURE1_ARB,(const GLfloat*)&c2->t[1]);
+  glVertex3fv((const GLfloat*)&c1->v[1]);
+
+  // upper right corner
+  glMultiTexCoord2fvARB(GL_TEXTURE0_ARB,(const GLfloat*)&c1->t[2]); 
+  glMultiTexCoord2fvARB(GL_TEXTURE1_ARB,(const GLfloat*)&c2->t[2]);
+  glVertex3fv((const GLfloat*)&c1->v[2]);
+
+  // split right edge of wall
+  //if (!wall->glseg->fracright)
+  //  gld_SplitRightEdge(wall, true);
+
+  // lower right corner
+  glMultiTexCoord2fvARB(GL_TEXTURE0_ARB,(const GLfloat*)&c1->t[3]); 
+  glMultiTexCoord2fvARB(GL_TEXTURE1_ARB,(const GLfloat*)&c2->t[3]);
+  glVertex3fv((const GLfloat*)&c1->v[3]);
+
+  glEnd();
+#else
   glBegin(GL_TRIANGLE_STRIP);
 
   // lower left corner
@@ -201,12 +234,30 @@ void gld_DrawTriangleStripARB(GLWall *wall, gl_strip_coords_t *c1, gl_strip_coor
   glVertex3fv((const GLfloat*)&c1->v[3]);
 
   glEnd();
+#endif
 }
 
 void gld_PreprocessDetail(void)
 {
   if (gl_arb_multitexture)
   {
+#ifdef __PS2__
+    glClientActiveTextureARB(GL_TEXTURE0_ARB);
+#if defined(USE_VERTEX_ARRAYS) || defined(USE_VBO)
+    glTexCoordPointer(2, GL_FLOAT, sizeof(flats_vbo[0]), flats_vbo_u);
+#endif
+
+    glClientActiveTextureARB(GL_TEXTURE1_ARB);
+#if defined(USE_VERTEX_ARRAYS) || defined(USE_VBO)
+    glTexCoordPointer(2, GL_FLOAT, sizeof(flats_vbo[0]), flats_vbo_u);
+#endif
+    glClientActiveTextureARB(GL_TEXTURE0_ARB);
+
+    glActiveTextureARB(GL_TEXTURE1_ARB);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
+    glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 2);
+    glActiveTextureARB(GL_TEXTURE0_ARB);
+#else
     GLEXT_glClientActiveTextureARB(GL_TEXTURE0_ARB);
 #if defined(USE_VERTEX_ARRAYS) || defined(USE_VBO)
     glTexCoordPointer(2, GL_FLOAT, sizeof(flats_vbo[0]), flats_vbo_u);
@@ -222,6 +273,7 @@ void gld_PreprocessDetail(void)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
     glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 2);
     GLEXT_glActiveTextureARB(GL_TEXTURE0_ARB);
+#endif
   }
 }
 
@@ -271,6 +323,40 @@ void gld_DrawWallWithDetail(GLWall *wall)
   }
   else
   {
+#ifdef __PS2__
+    gld_StaticLightAlpha(wall->light, wall->alpha);
+    glBegin(GL_TRIANGLE_FAN);
+
+    // lower left corner
+    glMultiTexCoord2fARB(GL_TEXTURE0_ARB,wall->ul,wall->vb); 
+    glMultiTexCoord2fARB(GL_TEXTURE1_ARB,wall->ul*w+dx,wall->vb*h+dy);
+    glVertex3f(wall->glseg->x1,wall->ybottom,wall->glseg->z1);
+
+    // split left edge of wall
+    if (!wall->glseg->fracleft)
+      gld_SplitLeftEdge(wall, true);
+
+    // upper left corner
+    glMultiTexCoord2fARB(GL_TEXTURE0_ARB,wall->ul,wall->vt);
+    glMultiTexCoord2fARB(GL_TEXTURE1_ARB,wall->ul*w+dx,wall->vt*h+dy);
+    glVertex3f(wall->glseg->x1,wall->ytop,wall->glseg->z1);
+
+    // upper right corner
+    glMultiTexCoord2fARB(GL_TEXTURE0_ARB,wall->ur,wall->vt); 
+    glMultiTexCoord2fARB(GL_TEXTURE1_ARB,wall->ur*w+dx,wall->vt*h+dy);
+    glVertex3f(wall->glseg->x2,wall->ytop,wall->glseg->z2);
+
+    // split right edge of wall
+    if (!wall->glseg->fracright)
+      gld_SplitRightEdge(wall, true);
+
+    // lower right corner
+    glMultiTexCoord2fARB(GL_TEXTURE0_ARB,wall->ur,wall->vb); 
+    glMultiTexCoord2fARB(GL_TEXTURE1_ARB,wall->ur*w+dx,wall->vb*h+dy);
+    glVertex3f(wall->glseg->x2,wall->ybottom,wall->glseg->z2);
+
+    glEnd();
+#else
     gld_StaticLightAlpha(wall->light, wall->alpha);
     glBegin(GL_TRIANGLE_FAN);
 
@@ -303,6 +389,7 @@ void gld_DrawWallWithDetail(GLWall *wall)
     glVertex3f(wall->glseg->x2,wall->ybottom,wall->glseg->z2);
 
     glEnd();
+#endif
   }
 }
 
@@ -454,8 +541,13 @@ void gld_DrawFlatDetail_NoARB(GLFlat *flat)
         // set texture coordinate of this vertex
         if (true)
         {
+#ifdef __PS2__
+          glMultiTexCoord2fvARB(GL_TEXTURE0_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+          glMultiTexCoord2fvARB(GL_TEXTURE1_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+#else
           GLEXT_glMultiTexCoord2fvARB(GL_TEXTURE0_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
           GLEXT_glMultiTexCoord2fvARB(GL_TEXTURE1_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+#endif
         }
         else
         {
@@ -631,10 +723,15 @@ void gld_BindDetailARB(GLTexture *gltexture, int enable)
       gltexture->detail->texid != last_detail_texid)
     {
       last_detail_texid = gltexture->detail->texid;
-
+#ifdef __PS2__
+      glActiveTextureARB(GL_TEXTURE1_ARB);
+      glBindTexture(GL_TEXTURE_2D, gltexture->detail->texid);
+      glActiveTextureARB(GL_TEXTURE0_ARB);
+#else
       GLEXT_glActiveTextureARB(GL_TEXTURE1_ARB);
       glBindTexture(GL_TEXTURE_2D, gltexture->detail->texid);
       GLEXT_glActiveTextureARB(GL_TEXTURE0_ARB);
+#endif
     }
   }
 }
@@ -724,26 +821,37 @@ GLuint gld_LoadDetailName(const char *name)
       SDL_FreeSurface(surf_raw);
       if (surf)
       {
+#ifdef __PS2__
+        if (gl_arb_multitexture)
+          glActiveTextureARB(GL_TEXTURE1_ARB);
+#else
         if (gl_arb_multitexture)
           GLEXT_glActiveTextureARB(GL_TEXTURE1_ARB);
+#endif
         glGenTextures(1, &texid);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glBindTexture(GL_TEXTURE_2D, texid);
-
+#ifndef __PS2__
         gluBuild2DMipmaps(GL_TEXTURE_2D, gl_tex_format,
           surf->w, surf->h, 
           imageformats[surf->format->BytesPerPixel], 
           GL_UNSIGNED_BYTE, surf->pixels);
-
+#endif
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);	
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+#ifndef __PS2__
         if (gl_ext_texture_filter_anisotropic)
           glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLfloat)(1<<gl_texture_filter_anisotropic));
-
+#endif
+#ifdef __PS2__
+        if (gl_arb_multitexture)
+          glActiveTextureARB(GL_TEXTURE0_ARB);
+#else
         if (gl_arb_multitexture)
           GLEXT_glActiveTextureARB(GL_TEXTURE0_ARB);
+#endif
 
         SDL_FreeSurface(surf);
       }

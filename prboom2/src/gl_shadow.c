@@ -4,7 +4,7 @@
  *
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
  *  based on BOOM, a modified and improved DOOM engine
- *  Copyright 2006 - 2008 G Jackson, Jaakko Kerônen
+ *  Copyright 2006 - 2008 G Jackson, Jaakko Kerï¿½nen
  *  Copyright 2009 - Andrey Budko
  *
  *  This program is free software; you can redistribute it and/or
@@ -97,9 +97,10 @@ void gld_InitShadows(void)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+#ifndef __PS2__
       if (gl_ext_texture_filter_anisotropic)
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLfloat)(1<<gl_texture_filter_anisotropic));
-
+#endif
       simple_shadows.loaded = true;
       simple_shadows.width = surf->w;
       simple_shadows.height = surf->h;

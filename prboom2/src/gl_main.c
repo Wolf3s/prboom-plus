@@ -174,6 +174,7 @@ void SetFrameTextureMode(void)
   }
   else
 #endif
+#ifndef __PS2__
   if (invul_method & INVUL_BW)
   {
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
@@ -187,6 +188,7 @@ void SetFrameTextureMode(void)
   glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE); 
   glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE);
   glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+#endif
 }
 
 void gld_InitTextureParams(void)
@@ -264,6 +266,7 @@ void gld_MultisamplingInit(void)
     extern int gl_depthbuffer_bits;
     
     gl_colorbuffer_bits = 32;
+#ifndef __PS2__
     SDL_GL_SetAttribute( SDL_GL_BUFFER_SIZE, gl_colorbuffer_bits );
   
     if (gl_depthbuffer_bits!=8 && gl_depthbuffer_bits!=16 && gl_depthbuffer_bits!=24)
@@ -272,6 +275,7 @@ void gld_MultisamplingInit(void)
 
     SDL_GL_SetAttribute ( SDL_GL_MULTISAMPLESAMPLES, render_multisampling );
     SDL_GL_SetAttribute ( SDL_GL_MULTISAMPLEBUFFERS, 1 );
+#endif
   }
 }
 
@@ -279,8 +283,11 @@ void gld_MultisamplingCheck(void)
 {
   if (render_multisampling)
   {
+#ifndef __PS2__
     int test = -1;
+
     SDL_GL_GetAttribute (SDL_GL_MULTISAMPLESAMPLES, &test);
+
     if (test!=render_multisampling)
     {
       void M_SaveDefaults (void);
@@ -289,6 +296,7 @@ void gld_MultisamplingCheck(void)
       M_SaveDefaults ();
       I_Error("Couldn't set %dX multisamples for %dx%d video mode", i, SCREENWIDTH, SCREENHEIGHT);
     }
+#endif
   }
 }
 
@@ -392,13 +400,16 @@ void gld_Init(int width, int height)
   gld_InitPalettedTextures();
   gld_InitTextureParams();
 
+
   glViewport(0, 0, SCREENWIDTH, SCREENHEIGHT);
 
   glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
   glClearDepth(1.0f);
 
   glEnable(GL_BLEND);
+#ifndef __PS2__
   glEnable(GL_DEPTH_CLAMP_NV);
+#endif
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // proff_dis
@@ -422,6 +433,7 @@ void gld_Init(int width, int height)
   glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 
+#ifndef __PS2__
   // e6y
   // if you have a prior crash in the game,
   // you can restore the gamma values to at least a linear value
@@ -440,12 +452,14 @@ void gld_Init(int width, int height)
   gld_InitMapPics();
   gld_InitHiRes();
 #endif
+#endif
 
   // Create FBO object and associated render targets
 #ifdef USE_FBO_TECHNIQUE
   gld_InitFBO();
   I_AtExit(gld_FreeScreenSizeFBO, true);
 #endif
+
 
   if(!gld_LoadGLDefs("GLBDEFS"))
   {
@@ -956,6 +970,7 @@ void gld_SetPalette(int palette)
   if (palette < 0)
     palette = last_palette;
   last_palette = palette;
+#ifndef __PS2__
   if (gl_shared_texture_palette) {
     const unsigned char *playpal;
     unsigned char pal[1024];
@@ -982,7 +997,10 @@ void gld_SetPalette(int palette)
     pal[transparent_pal_index*4+2]=0;
     pal[transparent_pal_index*4+3]=0;
     GLEXT_glColorTableEXT(GL_SHARED_TEXTURE_PALETTE_EXT, GL_RGBA, 256, GL_RGBA, GL_UNSIGNED_BYTE, pal);
-  } else {
+  } 
+  else
+#endif 
+  {
     if (palette>0)
     {
       if (palette<=8)
@@ -1097,7 +1115,11 @@ void gld_Finish(void)
   {
     glFinish();
   }
+#ifdef __PS2__
+  pglSwapBuffers();
+#else
   SDL_GL_SwapWindow(sdl_window);
+#endif
 }
 
 GLuint flats_vbo_id = 0; // ID of VBO
@@ -1171,9 +1193,11 @@ void gld_StartDrawScene(void)
 
   gld_MultisamplingSet();
 
+#ifndef __PS2__
   if (gl_shared_texture_palette)
     glEnable(GL_SHARED_TEXTURE_PALETTE_EXT);
-  gld_SetPalette(-1);
+#endif
+    gld_SetPalette(-1);
 
   glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
   glScissor(viewwindowx, SCREENHEIGHT-(viewheight+viewwindowy), viewwidth, viewheight);
@@ -1407,8 +1431,10 @@ void gld_EndDrawScene(void)
   glColor3f(1.0f,1.0f,1.0f);
   glDisable(GL_SCISSOR_TEST);
   glDisable(GL_ALPHA_TEST);
+#ifndef __PS2__
   if (gl_shared_texture_palette)
     glDisable(GL_SHARED_TEXTURE_PALETTE_EXT);
+#endif
 }
 
 static void gld_AddDrawWallItem(GLDrawItemType itemtype, void *itemdata)
@@ -2058,8 +2084,11 @@ static void gld_DrawFlat(GLFlat *flat)
   {
     float w, h, dx, dy;
     detail_t *detail = flat->gltexture->detail;
-
+#ifdef __PS2__
+    glActiveTextureARB(GL_TEXTURE1_ARB);
+#else
     GLEXT_glActiveTextureARB(GL_TEXTURE1_ARB);
+#endif
     gld_StaticLightAlpha(flat->light, flat->alpha);
     
     glPushMatrix();
@@ -2111,8 +2140,13 @@ static void gld_DrawFlat(GLFlat *flat)
         // set texture coordinate of this vertex
         if (has_detail)
         {
+#ifdef __PS2__
+          glMultiTexCoord2fvARB(GL_TEXTURE0_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+          glMultiTexCoord2fvARB(GL_TEXTURE1_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+#else
           GLEXT_glMultiTexCoord2fvARB(GL_TEXTURE0_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
           GLEXT_glMultiTexCoord2fvARB(GL_TEXTURE1_ARB, (GLfloat*)&flats_vbo[vertexnum].u);
+#endif
         }
         else
         {
@@ -2132,7 +2166,11 @@ static void gld_DrawFlat(GLFlat *flat)
   if (has_detail)
   {
     glPopMatrix();
+#ifdef __PS2__
+    glActiveTextureARB(GL_TEXTURE0_ARB);
+#else
     GLEXT_glActiveTextureARB(GL_TEXTURE0_ARB);
+#endif
   }
 
   if (has_offset)
@@ -2907,11 +2945,12 @@ void gld_InitDisplayLists(void)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-
+#ifndef __PS2__
     if (gl_ext_arb_vertex_buffer_object)
     {
       GLEXT_glBindBufferARB(GL_ARRAY_BUFFER, flats_vbo_id);
     }
+#endif
     glVertexPointer(3, GL_FLOAT, sizeof(flats_vbo[0]), flats_vbo_x);
     glTexCoordPointer(2, GL_FLOAT, sizeof(flats_vbo[0]), flats_vbo_u);
 
@@ -2953,12 +2992,13 @@ void gld_InitDisplayLists(void)
 
       gld_EnableClientCoordArray(GL_TEXTURE1_ARB, false);
     }
-
+#ifndef __PS2__
     if (gl_ext_arb_vertex_buffer_object)
     {
       // bind with 0, so, switch back to normal pointer operation
       GLEXT_glBindBufferARB(GL_ARRAY_BUFFER, 0);
     }
+#endif
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);

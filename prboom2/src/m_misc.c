@@ -467,11 +467,13 @@ default_t defaults[] =
   {"mus_portmidi_chorus_level",{&mus_portmidi_chorus_level},{-1},-1,127,def_int,ss_none}, // portmidi chorus send level
 
   {"Video settings",{NULL},{0},UL,UL,def_none,ss_none},
-  {"videomode",{NULL, &default_videomode},{0,"8bit"},UL,UL,def_str,ss_none},
+#if defined(__PS2__) && defined(GL_DOOM)
+  {"videomode",{NULL, &default_videomode},{0,"opengl"},UL,UL,def_str,ss_none},
   /* 640x480 default resolution */
-#ifdef __PS2__
   {"screen_resolution",{NULL, &screen_resolution},{0,"320x200"},UL,UL,def_str,ss_none},
 #else
+  {"videomode",{NULL, &default_videomode},{0,"8bit"},UL,UL,def_str,ss_none},
+  /* 640x480 default resolution */
   {"screen_resolution",{NULL, &screen_resolution},{0,"640x480"},UL,UL,def_str,ss_none},
 #endif
   {"use_fullscreen",{&use_fullscreen},{0},0,1, /* proff 21/05/2000 */

@@ -310,7 +310,9 @@ void M_ChangeAllowFog(void)
   FogColor[2] = ((float)((gl_fog_color >>  0) & 0xff)) / 255.0f;
   FogColor[3] = 0.0f;
 
+#ifndef __PS2__ // TODO: Try to link with ps2gl
   glFogi (GL_FOG_MODE, GL_EXP);
+#endif
   glFogfv(GL_FOG_COLOR, FogColor);
   glHint (GL_FOG_HINT, GL_NICEST);
 

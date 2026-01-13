@@ -287,7 +287,11 @@ void gld_SetTexturePalette(GLenum target)
   pal[transparent_pal_index*4+1]=0;
   pal[transparent_pal_index*4+2]=0;
   pal[transparent_pal_index*4+3]=0;
+#ifdef __PS2__
+  glColorTable(target, GL_RGBA, 256, GL_RGBA, GL_UNSIGNED_BYTE, pal);
+#else
   GLEXT_glColorTableEXT(target, GL_RGBA, 256, GL_RGBA, GL_UNSIGNED_BYTE, pal);
+#endif
 }
 
 static void gld_AddPatchToTexture_UnTranslated(GLTexture *gltexture, unsigned char *buffer, const rpatch_t *patch, int originx, int originy, int paletted)
@@ -762,8 +766,10 @@ void gld_SetTexFilters(GLTexture *gltexture)
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+#ifndef __PS2__
   if (aniso_filter > 0.0f)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso_filter);
+#endif
 }
 
 void gld_SetTexClamp(GLTexture *gltexture, unsigned int flags)
@@ -825,6 +831,7 @@ int gld_BuildTexture(GLTexture *gltexture, void *data, dboolean readonly, int wi
   tex_buffer_size = tex_width * tex_height * 4;
 
   //your video is modern
+#ifndef __PS2__
   if (gl_arb_texture_non_power_of_two)
   {
     glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP,
@@ -841,6 +848,7 @@ int gld_BuildTexture(GLTexture *gltexture, void *data, dboolean readonly, int wi
     result = true;
     goto l_exit;
   }
+#endif
 
 #ifdef USE_GLU_MIPMAP
   if (gltexture->flags & GLTEXTURE_MIPMAP)
@@ -901,13 +909,16 @@ int gld_BuildTexture(GLTexture *gltexture, void *data, dboolean readonly, int wi
       {
         tex_buffer = data;
       }
-
+#ifndef __PS2__
       if (gl_paletted_texture) {
         gld_SetTexturePalette(GL_TEXTURE_2D);
         glTexImage2D( GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT,
           tex_width, tex_height,
           0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, tex_buffer);
-      } else {
+      } 
+      else 
+#endif
+      {
         glTexImage2D( GL_TEXTURE_2D, 0, gl_tex_format,
           tex_width, tex_height,
           0, GL_RGBA, GL_UNSIGNED_BYTE, tex_buffer);

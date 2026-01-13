@@ -366,6 +366,7 @@ GLGenericImage * ReadDDSFile(const char *filename, int * bufsize, int * numMipma
 
         switch(ddsd.u4.ddpfPixelFormat.dwFourCC)
         {
+#ifndef __PS2__
         case DDRAW_H_FOURCC_DXT1:
           genericImage->format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
           factor = 2;
@@ -378,6 +379,7 @@ GLGenericImage * ReadDDSFile(const char *filename, int * bufsize, int * numMipma
           genericImage->format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
           factor = 4;
           break;
+#endif
         default:
           factor = -1;
           break;
@@ -739,7 +741,7 @@ static int gld_HiRes_GetExternalName(GLTexture *gltexture, char *img_path, char 
       static const char * extensions[] =
       {"png", "jpg", "tga", "pcx", "gif", "bmp", NULL};
       const char ** extp;
-
+#ifndef __PS2__
       if (GLEXT_glCompressedTexImage2DARB && dds_path[0] == '\0')
       {
         doom_snprintf(checkName, sizeof(checkName), checklist->path, hiresdir, texname, "dds");
@@ -748,7 +750,7 @@ static int gld_HiRes_GetExternalName(GLTexture *gltexture, char *img_path, char 
           strcpy(dds_path, checkName);
         }
       }
-      
+#endif
       for (extp = extensions; *extp; extp++)
       {
         doom_snprintf(checkName, sizeof(checkName), checklist->path, hiresdir, texname, *extp);
@@ -1068,7 +1070,7 @@ static int gld_HiRes_LoadDDSTexture(GLTexture* gltexture, GLuint* texid, const c
 {
   int result = false;
   int tex_width, tex_height;
-
+#ifndef __PS2__
   if (GLEXT_glCompressedTexImage2DARB)
   {
     int ddsbufsize, numMipmaps;
@@ -1091,8 +1093,11 @@ static int gld_HiRes_LoadDDSTexture(GLTexture* gltexture, GLuint* texid, const c
           gltexture->flags &= ~GLTEXTURE_MIPMAP;
 
         offset = 0;
+#ifdef __PS2__
+        blockSize = 8;
+#else
         blockSize = (ddsimage->format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
-
+#endif
         /* load the mipmaps */
         for (i = 0; i < (numMipmaps ? numMipmaps : 1) && (ddsimage->width || ddsimage->height); i++)
         {
@@ -1102,11 +1107,11 @@ static int gld_HiRes_LoadDDSTexture(GLTexture* gltexture, GLuint* texid, const c
             ddsimage->height = 1;
       
           size = ((ddsimage->width + 3) / 4) * ((ddsimage->height + 3) / 4) * blockSize;
-      
+#ifndef __PS2__      
           GLEXT_glCompressedTexImage2DARB(GL_TEXTURE_2D, i, ddsimage->format,
             ddsimage->width, ddsimage->height, 
             0, size, ddsimage->pixels + offset);
-      
+#endif     
     //      GLErrorReport();
           offset += size;
           ddsimage->width >>= 1;
@@ -1122,6 +1127,7 @@ static int gld_HiRes_LoadDDSTexture(GLTexture* gltexture, GLuint* texid, const c
       }
     }
   }
+#endif
 
   return result;
 }

@@ -130,7 +130,7 @@ jobs:
 
     - name: Compile PS2
       run: |
-        cmake -S prboom2 -B build -DBUILD_GL=OFF "-DCMAKE_TOOLCHAIN_FILE=${PS2DEV}/share/ps2dev.cmake" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+        cmake -S prboom2 -B build "-DCMAKE_TOOLCHAIN_FILE=${PS2DEV}/share/ps2dev.cmake" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
         cmake --build build
 
     - name: Upload release artifact ELF

@@ -123,7 +123,9 @@ static SDL_Surface *buffer;
 SDL_Window *sdl_window;
 SDL_Renderer *sdl_renderer;
 static SDL_Texture *sdl_texture;
+#ifndef __PS2__
 static SDL_GLContext sdl_glcontext;
+#endif
 static unsigned int windowid = 0;
 static SDL_Rect src_rect = { 0, 0, 0, 0 };
 static int display_index;
@@ -716,7 +718,9 @@ void I_SetPalette (int pal)
 
 static void I_ShutdownSDL(void)
 {
+#ifndef __PS2__
   if (sdl_glcontext) SDL_GL_DeleteContext(sdl_glcontext);
+#endif
   if (screen) SDL_FreeSurface(screen);
   if (buffer) SDL_FreeSurface(buffer);
   if (sdl_texture) SDL_DestroyTexture(sdl_texture);
@@ -1317,8 +1321,9 @@ void I_UpdateVideoMode(void)
 #endif
 
     I_InitScreenResolution();
-
+#ifndef __PS2__
     if (sdl_glcontext) SDL_GL_DeleteContext(sdl_glcontext);
+#endif
     if (screen) SDL_FreeSurface(screen);
     if (buffer) SDL_FreeSurface(buffer);
     if (sdl_texture) SDL_DestroyTexture(sdl_texture);
@@ -1327,7 +1332,9 @@ void I_UpdateVideoMode(void)
     
     sdl_renderer = NULL;
     sdl_window = NULL;
+#ifndef __PS2__
     sdl_glcontext = NULL;
+#endif
     screen = NULL;
     buffer = NULL;
     sdl_texture = NULL;
@@ -1336,10 +1343,12 @@ void I_UpdateVideoMode(void)
   // e6y: initialisation of screen_multiply
   screen_multiply = render_screen_multiply;
 
+#ifndef __PS2__
   // Initialize SDL with this graphics mode
   if (V_GetMode() == VID_MODEGL) {
     init_flags = SDL_WINDOW_OPENGL;
   }
+#endif
 
   // Fullscreen desktop for software renderer only - DTIED
   if (desired_fullscreen)
@@ -1361,6 +1370,7 @@ void I_UpdateVideoMode(void)
   if (V_GetMode() == VID_MODEGL)
   {
 #ifdef GL_DOOM
+#ifndef __PS2__
     SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 0 );
     SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 0 );
     SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 0 );
@@ -1374,6 +1384,7 @@ void I_UpdateVideoMode(void)
     SDL_GL_SetAttribute( SDL_GL_BUFFER_SIZE, gl_colorbuffer_bits );
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, gl_depthbuffer_bits );
     SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8 );
+#endif
 
     //e6y: anti-aliasing
     gld_MultisamplingInit();
@@ -1383,8 +1394,9 @@ void I_UpdateVideoMode(void)
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       SCREENWIDTH, SCREENHEIGHT,
       init_flags);
+#ifndef __PS2__
     sdl_glcontext = SDL_GL_CreateContext(sdl_window);
-
+#endif
     gld_CheckHardwareGamma();
 #endif
   }
@@ -1483,7 +1495,9 @@ void I_UpdateVideoMode(void)
 #ifdef GL_DOOM
   if (V_GetMode() == VID_MODEGL)
   {
+#ifndef __PS2__
     SDL_GL_SetSwapInterval(((render_vsync && !novsync) ? 1 : 0));
+#endif
   }
 #endif
 
@@ -1528,6 +1542,7 @@ void I_UpdateVideoMode(void)
 #ifdef GL_DOOM
   if (V_GetMode() == VID_MODEGL)
   {
+#ifndef __PS2__
     int temp;
     lprintf(LO_INFO,"SDL OpenGL PixelFormat:\n");
     SDL_GL_GetAttribute( SDL_GL_RED_SIZE, &temp );
@@ -1558,7 +1573,7 @@ void I_UpdateVideoMode(void)
     lprintf(LO_INFO,"    SDL_GL_MULTISAMPLEBUFFERS: %i\n",temp);
     SDL_GL_GetAttribute( SDL_GL_STENCIL_SIZE, &temp );
     lprintf(LO_INFO,"    SDL_GL_STENCIL_SIZE: %i\n",temp);
-
+#endif
     gld_Init(SCREENWIDTH, SCREENHEIGHT);
   }
 

@@ -50,6 +50,11 @@ typedef BOOL (WINAPI *SetAffinityFunc)(HANDLE hProcess, DWORD mask);
 #include <sched.h>
 #endif
 
+#if defined(__PS2__) && defined(GL_DOOM)
+#include <GL/glut.h>
+#include <GL/ps2gl.h>
+#endif
+
 #include <errno.h>
 
 #include "TEXTSCREEN/txt_main.h"
@@ -663,6 +668,11 @@ int main(int argc, char **argv)
 
   /* cphipps - call to video specific startup code */
   I_PreInitGraphics();
+
+#if defined(__PS2__) && defined(GL_DOOM)
+    int immBufferVertexSize = 64 * 1024;
+    pglInit(immBufferVertexSize, 1000);
+#endif
 
   D_DoomMain ();
   return 0;
