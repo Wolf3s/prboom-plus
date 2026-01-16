@@ -1390,12 +1390,12 @@ void I_UpdateVideoMode(void)
   }
   else
   {
+    int flags = SDL_RENDERER_TARGETTEXTURE;
 #ifdef __PS2__
-  SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
+    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");
 	SDL_SetHint(SDL_HINT_PS2_GS_WIDTH, "640");
 	SDL_SetHint(SDL_HINT_PS2_GS_HEIGHT, "480");    
 #endif
-    int flags = SDL_RENDERER_TARGETTEXTURE;
     if (render_vsync && !novsync)
       flags |= SDL_RENDERER_PRESENTVSYNC;
 
