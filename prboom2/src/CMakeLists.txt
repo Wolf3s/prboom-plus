@@ -413,7 +413,7 @@ function(AddGameExecutable TARGET SOURCES)
 
     if(PS2)
         target_compile_definitions(${TARGET} PRIVATE
-            GL_DOOM
+            GL_DOOM NO_VU0_VECTORS NO_ASM
         )
         target_link_libraries(${TARGET} PRIVATE -lps2stuff -lps2gl -lps2glut)
 

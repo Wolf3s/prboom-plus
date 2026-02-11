@@ -89,6 +89,11 @@
 #include "e6y.h"//e6y
 #include "i_main.h"
 
+#if defined(__PS2__) && defined(GL_DOOM)
+#include <GL/glut.h>
+#include <GL/ps2gl.h>
+#endif
+
 //e6y: new mouse code
 static SDL_Cursor* cursors[2] = {NULL, NULL};
 
@@ -1343,12 +1348,10 @@ void I_UpdateVideoMode(void)
   // e6y: initialisation of screen_multiply
   screen_multiply = render_screen_multiply;
 
-#ifndef __PS2__
   // Initialize SDL with this graphics mode
   if (V_GetMode() == VID_MODEGL) {
     init_flags = SDL_WINDOW_OPENGL;
   }
-#endif
 
   // Fullscreen desktop for software renderer only - DTIED
   if (desired_fullscreen)
@@ -1385,7 +1388,6 @@ void I_UpdateVideoMode(void)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, gl_depthbuffer_bits );
     SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8 );
 #endif
-
     //e6y: anti-aliasing
     gld_MultisamplingInit();
 
@@ -1396,6 +1398,9 @@ void I_UpdateVideoMode(void)
       init_flags);
 #ifndef __PS2__
     sdl_glcontext = SDL_GL_CreateContext(sdl_window);
+#else
+    int immBufferVertexSize = 64 * 1024;
+    pglInit(immBufferVertexSize, 1000);
 #endif
     gld_CheckHardwareGamma();
 #endif
